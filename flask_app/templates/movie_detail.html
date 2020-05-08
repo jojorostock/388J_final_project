@@ -27,23 +27,23 @@
   </div>
 </div>
 
-{# Reviews #}
+{# Comments #}
 <div class="row">
   <div class="col-md-12">
-    <h1> Reviews <small class="float-right">{{ reviews|length }} reviews</small></h1>
+    <h1> Comments <small class="float-right">{{ comments|length }}</small></h1>
     <ul class="media-list">
-      {% for review in reviews %}
+      {% for comment in comments %}
       <li class="media review-item">
-        <img class="mr-3 comment-pic" src="data:image/png;base64,{{review.image}}" alt="">
+        <img class="mr-3 comment-pic" src="data:image/png;base64,{{comment.image}}" alt="">
         <div class="media-body">
           <span class="float-right">
-            <small>{{ review.date }}</small>
+            <small>{{ comment.date }}</small>
           </span>
-          <a href="{{ url_for('user_detail', username=review.username) }}">
-            <strong>@{{ review.username }}</strong>
+          <a href="{{ url_for('user_detail', username=comment.username) }}">
+            <strong>@{{ comment.username }}</strong>
           </a>
           <p>
-            {{ review.content }}
+            {{ comment.content }}
           </p>
         </div>
       </li>
@@ -53,7 +53,7 @@
 </div>
 
 {% if current_user.is_authenticated %}
-{# Movie review submission form #}
+{# Comment submission form #}
 <div class="row">
   <div class="col">
     <form method="POST" action="">

@@ -14,9 +14,9 @@ import base64
 
 # local
 from . import app, bcrypt, client
-from .forms import (SearchForm, MovieReviewForm, RegistrationForm, LoginForm,
+from .forms import (SearchForm, GameCommentForm, RegistrationForm, LoginForm,
                              UpdateUsernameForm, UpdateProfilePicForm)
-from .models import User, Review, load_user
+from .models import User, Comment, load_user
 from .utils import current_time
 
 """ ************ View functions ************ """
@@ -45,9 +45,9 @@ def movie_detail(movie_id):
     if type(result) == dict:
         return render_template('movie_detail.html', error_msg=result['Error'])
 
-    form = MovieReviewForm()
+    form = GameCommentForm()
     if form.validate_on_submit():
-        review = Review(
+        comment = Comment(
             commenter=load_user(current_user.username), 
             content=form.text.data, 
             date=current_time(),
@@ -55,15 +55,15 @@ def movie_detail(movie_id):
             movie_title=result.title
         )
 
-        review.save()
+        comment.save()
 
         return redirect(request.path)
 
-    reviews_m = Review.objects(imdb_id=movie_id)
+    comments_m = Comment.objects(imdb_id=movie_id)
 
-    reviews = []
-    for r in reviews_m:
-        reviews.append({
+    comments = []
+    for r in comments_m:
+        comments.append({
             'date': r.date,
             'username': r.commenter.username,
             'content': r.content,
@@ -71,16 +71,16 @@ def movie_detail(movie_id):
         })
 
 
-    return render_template('movie_detail.html', form=form, movie=result, reviews=reviews)
+    return render_template('movie_detail.html', form=form, movie=result, comments=comments)
 
 @app.route('/user/<username>')
 def user_detail(username):
     user = User.objects(username=username).first()
-    reviews = Review.objects(commenter=user)
+    comments = Comment.objects(commenter=user)
 
     image = images(username)
 
-    return render_template('user_detail.html', username=username, reviews=reviews, image=image)
+    return render_template('user_detail.html', username=username, comments=comments, image=image)
 
 # @app.route('/images/<username>.png')
 def images(username):
