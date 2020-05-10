@@ -22,13 +22,21 @@ from . import messaging
 
 """ ************ View functions ************ """
 @app.route('/', methods=['GET', 'POST'])
-def index():
+def home():
     form = SearchForm()
 
     if form.validate_on_submit():
         return redirect(url_for('query_results', query=form.search_query.data))
 
-    return render_template('index.html', form=form)
+    return render_template('home.html', form=form)
+
+@app.route('/leagues')
+def leagues():
+    return render_template('leagues.html')
+
+@app.route('/events')
+def events():
+    return render_template('events.html')
 
 @app.route('/search-results/<query>', methods=['GET'])
 def query_results(query):
@@ -103,7 +111,7 @@ def images(username):
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
-        return redirect(url_for('index'))
+        return redirect(url_for('home'))
 
     form = RegistrationForm()
     if form.validate_on_submit():
@@ -122,7 +130,7 @@ def register():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('index'))
+        return redirect(url_for('home'))
 
     form = LoginForm()
     if form.validate_on_submit():
@@ -143,7 +151,7 @@ def login():
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('index'))
+    return redirect(url_for('home'))
 
 @app.route('/account', methods=['GET', 'POST'])
 @login_required
