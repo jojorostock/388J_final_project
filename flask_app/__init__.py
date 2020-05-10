@@ -7,10 +7,13 @@ from werkzeug.utils import secure_filename
 
 # stdlib
 import os
+from threading import Timer
 from datetime import datetime
 
 # local
 from .client import MovieClient
+
+from . import messaging
 
 app = Flask(__name__)
 app.config['MONGODB_HOST'] = 'mongodb://localhost:27017/sport_database'
@@ -23,5 +26,8 @@ login_manager.login_view = 'login'
 bcrypt = Bcrypt(app)
 
 client = MovieClient(os.environ.get('OMDB_API_KEY'))
+
+# start messaging timer
+Timer(messaging.twilio_timer_interval, messaging.send_scheduled_messages).start()
 
 from . import routes
