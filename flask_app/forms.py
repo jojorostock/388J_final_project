@@ -13,7 +13,7 @@ class SearchForm(FlaskForm):
     search_query = StringField('Query', validators=[InputRequired(), Length(min=1, max=100)])
     submit = SubmitField('Search')
 
-class MovieReviewForm(FlaskForm):
+class GameCommentForm(FlaskForm):
     text = TextAreaField('Comment', validators=[InputRequired(), Length(min=5, max=500)])
     submit = SubmitField('Enter Comment')
 

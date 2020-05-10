@@ -17,7 +17,7 @@ class User(db.Document, UserMixin):
     def get_id(self):
         return self.username
 
-class Review(db.Document):
+class Comment(db.Document):
     commenter = db.ReferenceField(User, required=True)
     content = db.StringField(required=True, min_length=5, max_length=500)
     date = db.StringField(required=True)
