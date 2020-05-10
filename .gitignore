@@ -1,2 +1,4 @@
 # virtual environment
 venv/
+__pycache__
+flask_app/__pycache__/
