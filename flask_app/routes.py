@@ -13,7 +13,7 @@ import io
 import base64
 
 # local
-from . import app, bcrypt, client
+from . import app, bcrypt, client, mongo_lock
 from .forms import (SearchForm, GameCommentForm, RegistrationForm, LoginForm,
                              UpdateUsernameForm, UpdateProfilePicForm)
 from .models import User, Comment, load_user
@@ -56,11 +56,15 @@ def game_detail(game_id):
             movie_title=result.title
         )
 
+        mongo_lock.aquire()
         comment.save()
+        mongo_lock.release()
 
         return redirect(request.path)
 
+    mongo_lock.aquire()
     comments_m = Comment.objects(imdb_id=game_id)
+    mongo_lock.release()
 
     comments = []
     for r in comments_m:
@@ -76,16 +80,20 @@ def game_detail(game_id):
 
 @app.route('/user/<username>')
 def user_detail(username):
+    mongo_lock.aquire()
     user = User.objects(username=username).first()
     comments = Comment.objects(commenter=user)
 
     image = images(username)
+    mongo_lock.release()
 
     return render_template('user_detail.html', username=username, comments=comments, image=image)
 
 # @app.route('/images/<username>.png')
 def images(username):
+    mongo_lock.aquire()
     user = User.objects(username=username).first()
+    mongo_lock.release()
     bytes_im = io.BytesIO(user.profile_pic.read())
     image = base64.b64encode(bytes_im.getvalue()).decode()
     return image
@@ -102,7 +110,9 @@ def register():
         hashed = bcrypt.generate_password_hash(form.password.data).decode("utf-8")
 
         user = User(username=form.username.data, email=form.email.data, password=hashed)
+        mongo_lock.acquire()
         user.save()
+        mongo_lock.release()
 
         return redirect(url_for('login'))
 
@@ -116,7 +126,9 @@ def login():
 
     form = LoginForm()
     if form.validate_on_submit():
+        mongo_lock.acquire()
         user = User.objects(username=form.username.data).first()
+        mongo_lock.release()
 
         if user is not None and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user)
@@ -141,8 +153,10 @@ def account():
 
     if username_form.validate_on_submit():
         # current_user.username = username_form.username.data
+        mongo_lock.aquire()
         current_user.modify(username=username_form.username.data)
         current_user.save()
+        mongo_lock.release()
         return redirect(url_for('account'))
 
     if profile_pic_form.validate_on_submit():
