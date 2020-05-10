@@ -56,13 +56,13 @@ def game_detail(game_id):
             movie_title=result.title
         )
 
-        mongo_lock.aquire()
+        mongo_lock.acquire()
         comment.save()
         mongo_lock.release()
 
         return redirect(request.path)
 
-    mongo_lock.aquire()
+    mongo_lock.acquire()
     comments_m = Comment.objects(imdb_id=game_id)
     mongo_lock.release()
 
@@ -80,7 +80,7 @@ def game_detail(game_id):
 
 @app.route('/user/<username>')
 def user_detail(username):
-    mongo_lock.aquire()
+    mongo_lock.acquire()
     user = User.objects(username=username).first()
     comments = Comment.objects(commenter=user)
 
@@ -91,7 +91,7 @@ def user_detail(username):
 
 # @app.route('/images/<username>.png')
 def images(username):
-    mongo_lock.aquire()
+    mongo_lock.acquire()
     user = User.objects(username=username).first()
     mongo_lock.release()
     bytes_im = io.BytesIO(user.profile_pic.read())
@@ -153,7 +153,7 @@ def account():
 
     if username_form.validate_on_submit():
         # current_user.username = username_form.username.data
-        mongo_lock.aquire()
+        mongo_lock.acquire()
         current_user.modify(username=username_form.username.data)
         current_user.save()
         mongo_lock.release()
