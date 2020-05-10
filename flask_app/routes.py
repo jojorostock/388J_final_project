@@ -18,6 +18,7 @@ from .forms import (SearchForm, GameCommentForm, RegistrationForm, LoginForm,
                              UpdateUsernameForm, UpdateProfilePicForm)
 from .models import User, Comment, load_user
 from .utils import current_time
+from . import messaging
 
 """ ************ View functions ************ """
 @app.route('/', methods=['GET', 'POST'])
@@ -38,12 +39,12 @@ def query_results(query):
     
     return render_template('query.html', results=results)
 
-@app.route('/movies/<movie_id>', methods=['GET', 'POST'])
-def movie_detail(movie_id):
-    result = client.retrieve_movie_by_id(movie_id)
+@app.route('/games/<game_id>', methods=['GET', 'POST'])
+def game_detail(game_id):
+    result = client.retrieve_game_by_id(game_id)
 
     if type(result) == dict:
-        return render_template('movie_detail.html', error_msg=result['Error'])
+        return render_template('game_detail.html', error_msg=result['Error'])
 
     form = GameCommentForm()
     if form.validate_on_submit():
@@ -59,7 +60,7 @@ def movie_detail(movie_id):
 
         return redirect(request.path)
 
-    comments_m = Comment.objects(imdb_id=movie_id)
+    comments_m = Comment.objects(imdb_id=game_id)
 
     comments = []
     for r in comments_m:
@@ -71,7 +72,7 @@ def movie_detail(movie_id):
         })
 
 
-    return render_template('movie_detail.html', form=form, movie=result, comments=comments)
+    return render_template('game_detail.html', form=form, movie=result, comments=comments)
 
 @app.route('/user/<username>')
 def user_detail(username):

@@ -69,7 +69,7 @@ class MovieClient(object):
 
         return result
 
-    def retrieve_movie_by_id(self, imdb_id):
+    def retrieve_game_by_id(self, imdb_id):
         """ 
         Use to obtain a Movie object representing the movie identified by
         the supplied imdb_id
