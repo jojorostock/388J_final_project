@@ -90,6 +90,8 @@ def game_detail(game_id):
 def project():
     return render_template('project.html')
 
+    
+
 # @main.route('/images/<username>.png')
 def images(username):
     mongo_lock.acquire()
@@ -98,3 +100,4 @@ def images(username):
     bytes_im = io.BytesIO(user.profile_pic.read())
     image = base64.b64encode(bytes_im.getvalue()).decode()
     return image
+
