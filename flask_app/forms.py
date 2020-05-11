@@ -39,11 +39,19 @@ class LoginForm(FlaskForm):
     username = StringField("Username", validators=[InputRequired()])
     password = PasswordField("Password", validators=[InputRequired()])
     submit = SubmitField("Login")
+    token = StringField('2FA Token', validators=[InputRequired(), Length(min=6, max=6)])
 
     def validate_username(self, username):
         user = User.objects(username=username.data).first()
         if user is None:
             raise ValidationError("That username does not exist in our database.")
+
+    def validate_token(self, token):
+        user = User.query.filter_by(username=self.username.data).first()
+        if user is not None:
+            tok_verified = pyotp.TOTP(user.otp_secret).verify(token.data)
+            if not tok_verified:
+                raise ValidationError("Invalid Token")
 
 class UpdateUsernameForm(FlaskForm):
     username = StringField('Username', validators=[InputRequired(), Length(min=1, max=40)])

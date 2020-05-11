@@ -7,6 +7,7 @@ from werkzeug.utils import secure_filename
 
 # stdlib
 import os
+import requests
 from threading import Timer, Lock
 from datetime import datetime
 
@@ -32,5 +33,6 @@ from . import messaging
 # start messaging timer
 Timer(messaging.twilio_timer_interval, messaging.send_scheduled_messages).start()
 
+session = {}
 
 from . import routes

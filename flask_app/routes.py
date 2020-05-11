@@ -4,16 +4,16 @@ from flask_mongoengine import MongoEngine
 from flask_login import LoginManager, current_user, login_user, logout_user, login_required
 from flask_bcrypt import Bcrypt
 from werkzeug.utils import secure_filename
-
 from PIL import Image
-
+import pyotp, qrcode
+from qrcode.image import svg
 # stdlib
 from datetime import datetime
 import io
 import base64
 
 # local
-from . import app, bcrypt, client, mongo_lock
+from . import app, bcrypt, client, mongo_lock, session
 from .forms import (SearchForm, GameCommentForm, RegistrationForm, LoginForm,
                              UpdateUsernameForm, UpdateProfilePicForm)
 from .models import User, Comment, load_user
@@ -122,7 +122,8 @@ def register():
         user.save()
         mongo_lock.release()
 
-        return redirect(url_for('login'))
+        session['new_username'] = user.username
+        return redirect(url_for('tfa'))
 
     return render_template('register.html', title='Register', form=form)
 
@@ -182,3 +183,38 @@ def account():
     image = images(current_user.username)
 
     return render_template("account.html", title="Account", username_form=username_form, profile_pic_form=profile_pic_form, image=image)
+
+@app.route("/tfa")
+def tfa():
+    if 'new_username' not in session:
+        return redirect(url_for('home'))
+
+    headers = {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0' # Expire immediately, so browser has to reverify everytime
+    }
+
+    return render_template('tfa.html'), headers
+
+@app.route("/qr_code")
+def qr_code():
+    if 'new_username' not in session:
+        return redirect(url_for('home'))
+
+    user = User.objects(username=session['new_username']).first()
+    session.pop('new_username')
+
+    uri = pyotp.totp.TOTP(user.otp_secret).provisioning_uri(name=user.username, issuer_name='CMSC388J-2FA')
+    img = qrcode.make(uri, image_factory=svg.SvgPathImage)
+    stream = io.BytesIO()
+    img.save(stream)
+
+    headers = {
+        'Content-Type': 'image/svg+xml',
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0' # Expire immediately, so browser has to reverify everytime
+    }
+
+    return stream.getvalue(), headers
