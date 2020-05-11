@@ -18,7 +18,7 @@
                     <span class="float-right">
                         <small>{{ comment.date }}</small>
                     </span>
-                    <strong>For: <a href="{{ url_for('game_detail', game_id=review.imdb_id) }}">
+                    <strong>For: <a href="{{ url_for('main.game_detail', game_id=review.imdb_id) }}">
                             {{ comment.movie_title }}
                         </a>
                     </strong>

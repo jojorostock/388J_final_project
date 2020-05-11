@@ -39,7 +39,7 @@
           <span class="float-right">
             <small>{{ comment.date }}</small>
           </span>
-          <a href="{{ url_for('user_detail', username=comment.username) }}">
+          <a href="{{ url_for('users.user_detail', username=comment.username) }}">
             <strong>@{{ comment.username }}</strong>
           </a>
           <p>

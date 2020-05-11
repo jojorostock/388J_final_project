@@ -2,3 +2,5 @@
 venv/
 __pycache__
 flask_app/__pycache__/
+flask_app/main/__pycache__/
+flask_app/users/__pycache__/

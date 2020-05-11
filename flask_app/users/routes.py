@@ -1,5 +1,5 @@
 # 3rd-party packages
-from flask import render_template, request, redirect, url_for, flash, Response, send_file
+from flask import render_template, request, redirect, url_for, flash, Response, send_file, Blueprint
 from flask_mongoengine import MongoEngine
 from flask_login import LoginManager, current_user, login_user, logout_user, login_required
 from flask_bcrypt import Bcrypt
@@ -13,84 +13,15 @@ import io
 import base64
 
 # local
-from . import app, bcrypt, client, mongo_lock, session
-from .forms import (SearchForm, GameCommentForm, RegistrationForm, LoginForm,
+from flask_app import bcrypt, client, mongo_lock, session, messaging
+from flask_app.forms import (SearchForm, GameCommentForm, RegistrationForm, LoginForm,
                              UpdateUsernameForm, UpdateProfilePicForm)
-from .models import User, Comment, load_user
-from .utils import current_time
-from . import messaging
+from flask_app.models import User, Comment, load_user
+from flask_app.utils import current_time
 
-""" ************ View functions ************ """
-@app.route('/', methods=['GET', 'POST'])
-def home():
-    form = SearchForm()
+users = Blueprint("users", __name__)
 
-    if form.validate_on_submit():
-        return redirect(url_for('query_results', query=form.search_query.data))
-
-    return render_template('home.html', form=form)
-
-@app.route('/leagues')
-def leagues():
-    return render_template('leagues.html')
-
-@app.route('/events')
-def events():
-    return render_template('events.html')
-
-@app.route('/search-results/<query>', methods=['GET'])
-def query_results(query):
-    results = client.search(query)
-
-    if type(results) == dict:
-        return render_template('query.html', error_msg=results['Error'])
-    
-    return render_template('query.html', results=results)
-
-@app.route('/games/<game_id>', methods=['GET', 'POST'])
-def game_detail(game_id):
-    result = client.retrieve_game_by_id(game_id)
-
-    if type(result) == dict:
-        return render_template('game_detail.html', error_msg=result['Error'])
-
-    form = GameCommentForm()
-    if form.validate_on_submit():
-        comment = Comment(
-            commenter=load_user(current_user.username), 
-            content=form.text.data, 
-            date=current_time(),
-            imdb_id=movie_id,
-            movie_title=result.title
-        )
-
-        mongo_lock.acquire()
-        comment.save()
-        mongo_lock.release()
-
-        return redirect(request.path)
-
-    mongo_lock.acquire()
-    comments_m = Comment.objects(imdb_id=game_id)
-    mongo_lock.release()
-
-    comments = []
-    for r in comments_m:
-        comments.append({
-            'date': r.date,
-            'username': r.commenter.username,
-            'content': r.content,
-            'image': images(r.commenter.username)
-        })
-
-
-    return render_template('game_detail.html', form=form, movie=result, comments=comments)
-
-@app.route('/project')
-def project():
-    return render_template('project.html')
-
-@app.route('/user/<username>')
+@users.route('/user/<username>')
 def user_detail(username):
     mongo_lock.acquire()
     user = User.objects(username=username).first()
@@ -101,21 +32,12 @@ def user_detail(username):
 
     return render_template('user_detail.html', username=username, comments=comments, image=image)
 
-# @app.route('/images/<username>.png')
-def images(username):
-    mongo_lock.acquire()
-    user = User.objects(username=username).first()
-    mongo_lock.release()
-    bytes_im = io.BytesIO(user.profile_pic.read())
-    image = base64.b64encode(bytes_im.getvalue()).decode()
-    return image
-
 
 """ ************ User Management views ************ """
-@app.route('/register', methods=['GET', 'POST'])
+@users.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
-        return redirect(url_for('home'))
+        return redirect(url_for('main.home'))
 
     form = RegistrationForm()
     if form.validate_on_submit():
@@ -127,15 +49,15 @@ def register():
         mongo_lock.release()
 
         session['new_username'] = user.username
-        return redirect(url_for('tfa'))
+        return redirect(url_for('users.tfa'))
 
     return render_template('register.html', title='Register', form=form)
 
 
-@app.route('/login', methods=['GET', 'POST'])
+@users.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('home'))
+        return redirect(url_for('main.home'))
 
     form = LoginForm()
     if form.validate_on_submit():
@@ -145,20 +67,20 @@ def login():
 
         if user is not None and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user)
-            return redirect(url_for('account'))
+            return redirect(url_for('users.account'))
         else:
             flash('Login failed. Check your username and/or password')
-            return redirect(url_for('login'))
+            return redirect(url_for('users.login'))
 
     return render_template('login.html', title='Login', form=form)
 
-@app.route('/logout')
+@users.route('/logout')
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('home'))
+    return redirect(url_for('main.home'))
 
-@app.route('/account', methods=['GET', 'POST'])
+@users.route('/account', methods=['GET', 'POST'])
 @login_required
 def account():
     username_form = UpdateUsernameForm()
@@ -170,7 +92,7 @@ def account():
         current_user.modify(username=username_form.username.data)
         current_user.save()
         mongo_lock.release()
-        return redirect(url_for('account'))
+        return redirect(url_for('users.account'))
 
     if profile_pic_form.validate_on_submit():
         img = profile_pic_form.propic.data
@@ -182,16 +104,16 @@ def account():
             current_user.profile_pic.replace(img.stream, content_type='images/png')
         current_user.save()
 
-        return redirect(url_for('account'))
+        return redirect(url_for('users.account'))
 
     image = images(current_user.username)
 
     return render_template("account.html", title="Account", username_form=username_form, profile_pic_form=profile_pic_form, image=image)
 
-@app.route("/tfa")
+@users.route("/tfa")
 def tfa():
     if 'new_username' not in session:
-        return redirect(url_for('home'))
+        return redirect(url_for('main.home'))
 
     headers = {
         'Cache-Control': 'no-cache, no-store, must-revalidate',
@@ -201,10 +123,10 @@ def tfa():
 
     return render_template('tfa.html'), headers
 
-@app.route("/qr_code")
+@users.route("/qr_code")
 def qr_code():
     if 'new_username' not in session:
-        return redirect(url_for('home'))
+        return redirect(url_for('main.home'))
 
     user = User.objects(username=session['new_username']).first()
     session.pop('new_username')
