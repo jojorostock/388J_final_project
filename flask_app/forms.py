@@ -5,7 +5,7 @@ from werkzeug.utils import secure_filename
 from wtforms import StringField, IntegerField, SubmitField, TextAreaField, PasswordField
 from wtforms.validators import (InputRequired, DataRequired, NumberRange, Length, Email, 
                                 EqualTo, ValidationError)
-
+import pyotp
 
 from .models import User
 
@@ -47,7 +47,7 @@ class LoginForm(FlaskForm):
             raise ValidationError("That username does not exist in our database.")
 
     def validate_token(self, token):
-        user = User.query.filter_by(username=self.username.data).first()
+        user = User.objects(username=self.username.data).first()
         if user is not None:
             tok_verified = pyotp.TOTP(user.otp_secret).verify(token.data)
             if not tok_verified:
