@@ -86,6 +86,10 @@ def game_detail(game_id):
 
     return render_template('game_detail.html', form=form, movie=result, comments=comments)
 
+@app.route('/project')
+def project():
+    return render_template('project.html')
+
 @app.route('/user/<username>')
 def user_detail(username):
     mongo_lock.acquire()
