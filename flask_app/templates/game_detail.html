@@ -5,22 +5,23 @@
 <b>{{ error_msg }}</b>
 {% endif %}
 
-{% if movie %}
+{% if game %}
 
 {# Display card for the movie details #}
 <div class="row">
   <div class="col">
     <div class="card text-center">
       <div class="card-header">
-        {{ movie.title }} ({{ movie.year }})
+        {{ game.strEvent }} ({{ game.dateEventLocal }})
       </div>
       <div class="card-body">
-        <img src="{{ movie.poster_url }}" class="mr-3 movie" alt="alt text">
         <ul class="list-group list-group-flush">
-          <li class="list-group-item"><b>Directed by:</b> {{ movie.director }}</li>
-          <li class="list-group-item"><b>Actors:</b> {{ movie.actors }}</li>
-          <li class="list-group-item"><b>Genres:</b> {{ movie.genres }}</li>
-          <li class="list-group-item"><b>Awards:</b> {{ movie.awards }}</li>
+          <li class="list-group-item"><b>Home Team:</b> <a href="{{url_for('main.team_detail', team_id=game.idHomeTeam)}}">{{ game.strHomeTeam }}</a>: {{ game.intHomeScore }}</li>
+          <li class="list-group-item"><b>Away Team:</b> <a href="{{url_for('main.team_detail', team_id=game.idAwayTeam)}}">{{ game.strAwayTeam }}</a>a: {{ game.intAwayScore }}</li>
+          <li class="list-group-item"><b>League:</b> {{ game.strLeague }}</li>
+          {% if game.strDescriptionEN %}
+          <li class="list-group-item"><b>Description :</b> {{ game.strDescriptionEN }}</li>
+          {% endif %}
         </ul>
       </div>
     </div>

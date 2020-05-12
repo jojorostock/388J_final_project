@@ -5,11 +5,13 @@
 {% endif %}
 
 <div class="container-fluid">
-    {% for result in results %}
+    <h2>Teams</h2>
+    {% for team in results %}
     <div class="media">
-        <img src="{{ result.poster_url }}" class="mr-3 movie" alt="missing">
+        <img src="{{ team.strTeamBadge }}" class="mr-3 movie" alt="missing">
         <div class="media-body">
-        <h5 class="mt-0"><a href="{{ url_for('main.game_detail', game_id=result.imdb_id) }}">{{ result.title }}</a> ({{ result.year }})</h5>
+        
+        <h5 class="mt-0"><a href="{{url_for('main.team_detail', team_id=team.idTeam)}}">{{ team.strTeam }}</a> ({{ team.strLeague }})</h5>
         </div>
     </div>
     {% endfor %}

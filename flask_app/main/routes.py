@@ -13,11 +13,16 @@ import io
 import base64
 
 # local
-from flask_app import bcrypt, client, mongo_lock, session, messaging
+from flask_app import bcrypt, client, mongo_lock, session, messaging, client2
 from flask_app.forms import (SearchForm, GameCommentForm, RegistrationForm, LoginForm,
                              UpdateUsernameForm, UpdateProfilePicForm)
 from flask_app.models import User, Comment, load_user
 from flask_app.utils import current_time
+
+# API
+# IDs for leagues
+
+
 
 main = Blueprint("main", __name__)
 
@@ -32,15 +37,28 @@ def home():
 
 @main.route('/leagues')
 def leagues():
-    return render_template('leagues.html')
+    # ls = api.Search().Leagues(country="England",sport="Soccer")
+    ls = client2.getLeagues("United States")
+    return render_template('leagues.html', leaguesList = ls)
 
 @main.route('/events')
 def events():
-    return render_template('events.html')
+    NFL_ID = 4391
+    MLB_ID = 4424
+    NBA_ID = 4387
+    MLS_ID = 4340
+    NHL_ID = 4380
+
+    nfl_events = client2.getLeagueLastFifteen(league_id = NFL_ID)
+    mlb_events = client2.getLeagueLastFifteen(league_id = MLB_ID)
+    nba_events = client2.getLeagueLastFifteen(league_id = NBA_ID)
+    mls_events = client2.getLeagueLastFifteen(league_id = MLS_ID)
+    nhl_events = client2.getLeagueLastFifteen(league_id = NHL_ID)
+    return render_template('events.html', NFL_events = nfl_events, MLB_events = mlb_events, NBA_events = nba_events,MLS_events = mls_events,NHL_events = nhl_events)
 
 @main.route('/search-results/<query>', methods=['GET'])
 def query_results(query):
-    results = client.search(query)
+    results = client2.searchTeams(query)
 
     if type(results) == dict:
         return render_template('query.html', error_msg=results['Error'])
@@ -49,10 +67,10 @@ def query_results(query):
 
 @main.route('/games/<game_id>', methods=['GET', 'POST'])
 def game_detail(game_id):
-    result = client.retrieve_game_by_id(game_id)
+    result = client2.getEventByID(game_id)
 
-    if type(result) == dict:
-        return render_template('game_detail.html', error_msg=result['Error'])
+    # if type(result) == dict:
+    #     return render_template('game_detail.html', error_msg=result['Error'])
 
     form = GameCommentForm()
     if form.validate_on_submit():
@@ -60,8 +78,7 @@ def game_detail(game_id):
             commenter=load_user(current_user.username), 
             content=form.text.data, 
             date=current_time(),
-            imdb_id=movie_id,
-            movie_title=result.title
+            game_id=game_id,
         )
 
         mongo_lock.acquire()
@@ -84,7 +101,19 @@ def game_detail(game_id):
         })
 
 
-    return render_template('game_detail.html', form=form, movie=result, comments=comments)
+    return render_template('game_detail.html', form=form, game=result, comments=comments)
+
+@main.route('/teams/<team_id>', methods=['GET', 'POST'])
+def team_detail(team_id):
+    result = client2.getTeamByID(team_id)
+
+    # if type(result) == dict:
+    #     return render_template('game_detail.html', error_msg=result['Error'])
+
+    return render_template('team_detail.html', team=result)
+
+
+
 
 @main.route('/project')
 def project():

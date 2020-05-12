@@ -12,7 +12,7 @@ from threading import Timer, Lock
 from datetime import datetime
 
 # local
-from .client import MovieClient
+from .client import MovieClient, SportClient
 
 # lock to ensure synchronization of mongodb access
 mongo_lock = Lock()
@@ -28,6 +28,7 @@ login_manager.login_view = 'login'
 bcrypt = Bcrypt(app)
 
 client = MovieClient(os.environ.get('OMDB_API_KEY'))
+client2 = SportClient("1")
 
 from . import messaging
 # start messaging timer
