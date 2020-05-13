@@ -2,7 +2,11 @@ import requests
 
 
 class League(object):
-    def __init__(self, sport_json):
+    def __init__(self, sport_json, detailed=False):
+        if detailed:
+            self.strDescriptionEN = sport_json["strDescriptionEN"]
+            self.strTrophy = sport_json["strTrophy"]
+            self.strBadge = sport_json["strBadge"]
         self.idLeague = sport_json["idLeague"]
         self.strLeague = sport_json["strLeague"]
         self.strSport = sport_json["strSport"]
@@ -70,7 +74,7 @@ class SportClient(object):
         for item_json in result_json:
             league = League(item_json)
             # Gross sorry the get leagues from the united states only returns the AAF for some reason
-            if league.strLeague == "NFL" or league.strLeague == "MLB" or league.strLeague == "MLS, Major League Soccer" or league.strLeague == "NHL" or league.strLeague == "NBA":
+            if league.strLeague == "NFL" or league.strLeague == "MLB" or league.strLeague == "American Major League Soccer" or league.strLeague == "NHL" or league.strLeague == "NBA":
                 result.append(league)
 
         # print(result[0].strLeague)
@@ -87,9 +91,15 @@ class SportClient(object):
             raise ValueError('Search request failed; make sure your API key is correct and authorized')
 
         data = resp.json()
-        result_json = data['events']
-
+        result_json = []
+        if nextFive:
+            result_json = data['events']
+        else:
+            result_json = data['results']
         result = []
+
+        if result_json is None:
+            return None
 
         for item_json in result_json:
             event = Event(item_json)
@@ -108,10 +118,15 @@ class SportClient(object):
             raise ValueError('Search request failed; make sure your API key is correct and authorized')
 
         data = resp.json()
-        result_json = data['events']
-
+        result_json = []
+        if nextFive:
+            result_json = data['events']
+        else:
+            result_json = data['results']
         result = []
 
+        if result_json is None:
+            return None
         for item_json in result_json:
             event = Event(item_json)
             result.append(event)
@@ -164,6 +179,41 @@ class SportClient(object):
         team = Team(result_json[0])
 
         return team
+
+    def getLeagueByID(self, league_id):
+        leagues_url = self.base_url + f'lookupleague.php?id={league_id}'
+
+        resp = self.sess.get(leagues_url)
+
+        if resp.status_code != 200:
+            raise ValueError('Search request failed; make sure your API key is correct and authorized')
+
+        data = resp.json()
+        result_json = data['leagues']
+
+        if result_json is None:
+            return {'Error': 'No event found'}
+
+        league = League(result_json[0], detailed=True)
+        return league
+
+    def getTeamsInALeague(self, league_id):
+        teams_url = self.base_url + f'lookup_all_teams.php?id={league_id}'
+        resp = self.sess.get(teams_url)
+        data = resp.json()
+        result_json = data['teams']
+
+        result = []
+
+        if result_json is None:
+            return {'Error': 'No teams found'}
+
+        for item_json in result_json:
+            team = Team(item_json)
+            result.append(team)
+
+        return result
+
 
 
 

@@ -7,19 +7,41 @@
 
 {% if team %}
 
-{# Display card for the movie details #}
+{# Display card for the Team details #}
 <div class="row">
   <div class="col">
     <div class="card text-center">
       <div class="card-header">
-        {{ team.strTeam }} ({{ team.strLeague }})
+        {{ team.strTeam }} (<a href="{{url_for('main.league_detail', league_id=team.idLeague)}}">{{ team.strLeague }}</a>)
       </div>
       <div class="card-body">
         <ul class="list-group list-group-flush">
           <li class="list-group-item"><b>Logo: </b><img src="{{ team.strTeamBadge }}" class="mr-3 movie" alt="missing"></li>
           {% if team.strDescriptionEN %}
-          <li class="list-group-item"><b>Description :</b> {{ team.strDescriptionEN }}</li>
+          <li class="list-group-item"><b>Description:</b> {{ team.strDescriptionEN }}</li>
           {% endif %}
+          <li class="list-group-item">
+            {% if teamLastFive %}
+              <b>Recent Games:</b>
+              <ul>
+              {% for event in teamLastFive %}
+              <li>
+                <a href = "{{url_for('main.game_detail', game_id=event.idEvent)}}">{{event.strHomeTeam}} {{event.intHomeScore}} vs {{event.strAwayTeam}} {{event.intAwayScore}} on {{event.dateEventLocal}}</a>
+              </li>
+              {% endfor %}
+              </ul>
+            {% endif %}
+            {% if teamNextFive %}
+              <b>Upcoming Games:</b>
+              <ul>
+              {% for event in teamNextFive %}
+              <li>
+                <a href = "{{url_for('main.game_detail', game_id=event.idEvent)}}">{{event.strHomeTeam}} vs {{event.strAwayTeam}} on {{event.dateEventLocal}}</a>
+              </li>
+              {% endfor %}
+              </ul>
+            {% endif %}
+          </li>
         </ul>
       </div>
     </div>

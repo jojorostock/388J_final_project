@@ -21,6 +21,11 @@ from flask_app.utils import current_time
 
 # API
 # IDs for leagues
+NFL_ID = 4391
+MLB_ID = 4424
+NBA_ID = 4387
+MLS_ID = 4340
+NHL_ID = 4380
 
 
 
@@ -43,11 +48,6 @@ def leagues():
 
 @main.route('/events')
 def events():
-    NFL_ID = 4391
-    MLB_ID = 4424
-    NBA_ID = 4387
-    MLS_ID = 4340
-    NHL_ID = 4380
 
     nfl_events = client2.getLeagueLastFifteen(league_id = NFL_ID)
     mlb_events = client2.getLeagueLastFifteen(league_id = MLB_ID)
@@ -64,6 +64,14 @@ def query_results(query):
         return render_template('query.html', error_msg=results['Error'])
     
     return render_template('query.html', results=results)
+
+@main.route('/leagues/<league_id>', methods=['GET', 'POST'])
+def league_detail(league_id):
+    result = client2.getLeagueByID(league_id)
+    teams = client2.getTeamsInALeague(league_id)
+
+    return render_template('league_detail.html', league=result, teams=teams)
+
 
 @main.route('/games/<game_id>', methods=['GET', 'POST'])
 def game_detail(game_id):
@@ -106,11 +114,13 @@ def game_detail(game_id):
 @main.route('/teams/<team_id>', methods=['GET', 'POST'])
 def team_detail(team_id):
     result = client2.getTeamByID(team_id)
+    lastFive = client2.getTeamLastFive(team_id)
+    nextFive = client2.getTeamLastFive(team_id, nextFive=True)
 
     # if type(result) == dict:
     #     return render_template('game_detail.html', error_msg=result['Error'])
 
-    return render_template('team_detail.html', team=result)
+    return render_template('team_detail.html', team=result, teamLastFive=lastFive, teamNextFive=nextFive)
 
 
 

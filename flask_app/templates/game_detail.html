@@ -17,7 +17,7 @@
       <div class="card-body">
         <ul class="list-group list-group-flush">
           <li class="list-group-item"><b>Home Team:</b> <a href="{{url_for('main.team_detail', team_id=game.idHomeTeam)}}">{{ game.strHomeTeam }}</a>: {{ game.intHomeScore }}</li>
-          <li class="list-group-item"><b>Away Team:</b> <a href="{{url_for('main.team_detail', team_id=game.idAwayTeam)}}">{{ game.strAwayTeam }}</a>a: {{ game.intAwayScore }}</li>
+          <li class="list-group-item"><b>Away Team:</b> <a href="{{url_for('main.team_detail', team_id=game.idAwayTeam)}}">{{ game.strAwayTeam }}</a>: {{ game.intAwayScore }}</li>
           <li class="list-group-item"><b>League:</b> {{ game.strLeague }}</li>
           {% if game.strDescriptionEN %}
           <li class="list-group-item"><b>Description :</b> {{ game.strDescriptionEN }}</li>

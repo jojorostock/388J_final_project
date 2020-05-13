@@ -1,0 +1,45 @@
+{% extends "header.html" %}
+{% block content %}
+
+{% if error_msg %}
+<b>{{ error_msg }}</b>
+{% endif %}
+
+{% if league %}
+
+{# Display card for the League details #}
+<div class="row">
+  <div class="col">
+    <div class="card text-center">
+      <div class="card-header">
+        {{ league.strLeague }} ({{ league.strSport }})
+      </div>
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item"><b>Logo: </b><img src="{{ league.strBadge }}" class="mr-3 movie" alt="missing"></li>
+          {% if league.strDescriptionEN %}
+          <li class="list-group-item"><b>Description:</b> {{ league.strDescriptionEN }}</li>
+          {% endif %}
+          <li class="list-group-item">
+            {% if teams %}
+              <b>Teams:</b>
+              <ul>
+              {% for team in teams %}
+              <div class="media">
+                <img src="{{ team.strTeamBadge }}" class="mr-3 movie" alt="missing">
+                <div class="media-body">
+                
+                <h5 class="mt-0"><a href="{{url_for('main.team_detail', team_id=team.idTeam)}}">{{ team.strTeam }}</a></h5>
+                </div>
+              </div>
+              {% endfor %}
+              </ul>
+            {% endif %}
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+{% endblock content %}
