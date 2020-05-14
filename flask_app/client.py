@@ -91,12 +91,8 @@ class SportClient(object):
             raise ValueError('Search request failed; make sure your API key is correct and authorized')
 
         data = resp.json()
-        result_json = []
-        if nextFive:
-            result_json = data['events']
-        else:
-            result_json = data['results']
         result = []
+        result_json = data['events']
 
         if result_json is None:
             return None
