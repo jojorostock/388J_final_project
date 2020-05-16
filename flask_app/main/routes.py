@@ -96,7 +96,7 @@ def game_detail(game_id):
         return redirect(request.path)
 
     mongo_lock.acquire()
-    comments_m = Comment.objects(imdb_id=game_id)
+    comments_m = Comment.objects(game_id=game_id)
     mongo_lock.release()
 
     comments = []
