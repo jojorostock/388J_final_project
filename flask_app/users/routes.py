@@ -27,10 +27,9 @@ def user_detail(username):
     user = User.objects(username=username).first()
     comments = Comment.objects(commenter=user)
 
-    image = images(username)
     mongo_lock.release()
 
-    return render_template('user_detail.html', username=username, comments=comments, image=image)
+    return render_template('user_detail.html', username=username, comments=comments)
 
 
 """ ************ User Management views ************ """
@@ -93,20 +92,6 @@ def account():
         current_user.save()
         mongo_lock.release()
         return redirect(url_for('users.account'))
-
-    if profile_pic_form.validate_on_submit():
-        img = profile_pic_form.propic.data
-        filename = secure_filename(img.filename)
-
-        if current_user.profile_pic.get() is None:
-            current_user.profile_pic.put(img.stream, content_type='images/png')
-        else:
-            current_user.profile_pic.replace(img.stream, content_type='images/png')
-        current_user.save()
-
-        return redirect(url_for('users.account'))
-
-    # image = images(current_user.username)
 
     return render_template("account.html", title="Account", username_form=username_form, profile_pic_form=profile_pic_form)
 

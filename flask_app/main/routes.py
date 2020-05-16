@@ -105,7 +105,6 @@ def game_detail(game_id):
             'date': r.date,
             'username': r.commenter.username,
             'content': r.content,
-            'image': images(r.commenter.username)
         })
 
 
@@ -122,21 +121,6 @@ def team_detail(team_id):
 
     return render_template('team_detail.html', team=result, teamLastFive=lastFive, teamNextFive=nextFive)
 
-
-
-
 @main.route('/project')
 def project():
     return render_template('project.html')
-
-    
-
-# @main.route('/images/<username>.png')
-def images(username):
-    mongo_lock.acquire()
-    user = User.objects(username=username).first()
-    mongo_lock.release()
-    bytes_im = io.BytesIO(user.profile_pic.read())
-    image = base64.b64encode(bytes_im.getvalue()).decode()
-    return image
-
