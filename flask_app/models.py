@@ -23,6 +23,6 @@ class Comment(db.Document):
     commenter = db.ReferenceField(User, required=True)
     content = db.StringField(required=True, min_length=5, max_length=500)
     date = db.StringField(required=True)
-    game_id = db.StringField(required=True, min_length=9, max_length=9)
+    game_id = db.StringField(required=True)
 
 

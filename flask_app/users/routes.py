@@ -13,7 +13,7 @@ import io
 import base64
 
 # local
-from flask_app import bcrypt, client, mongo_lock, session, messaging
+from flask_app import bcrypt, client, mongo_lock, session, messaging, client2
 from flask_app.forms import (SearchForm, GameCommentForm, RegistrationForm, LoginForm,
                              UpdateUsernameForm, UpdateProfilePicForm)
 from flask_app.models import User, Comment, load_user
@@ -29,7 +29,7 @@ def user_detail(username):
 
     mongo_lock.release()
 
-    return render_template('user_detail.html', username=username, comments=comments)
+    return render_template('user_detail.html', username=username, comments=comments, client=client2)
 
 
 """ ************ User Management views ************ """
