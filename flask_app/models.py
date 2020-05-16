@@ -11,6 +11,7 @@ def load_user(user_id):
 class User(db.Document, UserMixin):
     username = db.StringField(required=True, unique=True)
     email = db.EmailField(required=True, unique=True)
+    phone_number = db.StringField(required=True, min_length=12, max_length=12)
     password = db.StringField(required=True)
     profile_pic = db.ImageField()
     otp_secret = db.StringField(required=True, min_length=16, max_length=16, default=pyotp.random_base32())

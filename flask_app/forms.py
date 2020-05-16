@@ -20,10 +20,19 @@ class GameCommentForm(FlaskForm):
 class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[InputRequired(), Length(min=1, max=40)])
     email = StringField('Email', validators=[InputRequired(), Email()])
+    phone = IntegerField('Phone Number', validators=[InputRequired()])
     password = PasswordField('Password', validators=[InputRequired()])
     confirm_password = PasswordField('Confirm Password', 
                                     validators=[InputRequired(), EqualTo('password')])
     submit = SubmitField('Sign Up')
+
+    def validate_phone(self, phone):
+        if type(phone.data) is not int:
+            raise ValidationError('Phone number must not contain non-numeric characters')
+        first_digit = phone.data / 10000000000
+        print('first_digit: ' + str(first_digit))
+        if (first_digit < 1 or first_digit > 9):
+            raise ValidationError('Phone number must 11 digits. Make sure to include country code and area code.')
 
     def validate_username(self, username):
         user = User.objects(username=username.data).first()
