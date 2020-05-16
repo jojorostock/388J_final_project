@@ -33,6 +33,14 @@ class Event(object):
         self.idAwayTeam = sport_json["idAwayTeam"]
         self.strResult = sport_json["strResult"]
 
+    def getEventDescription(self, score=False):
+        if self.intHomeScore is None or self.intAwayScore is None or not score:
+            return "{home_team} vs {away_team} on {date}".format(home_team=self.strHomeTeam,
+                    away_team=self.strAwayTeam, date=self.dateEventLocal)
+        else:
+            return "{home_team}: {home_score} {away_team}: {away_score} on {date}".format(home_team=self.strHomeTeam,
+                home_score=self.intHomeScore, away_team=self.strAwayTeam, away_score=self.intAwayScore, date=self.dateEventLocal)
+
 class Team(object):
     def __init__(self, sport_json):
         self.idTeam = sport_json["idTeam"]

@@ -1,35 +1,13 @@
 {% extends "header.html" %}
 {% block content %}
 <div style="position:absolute;top:70;left:0;">
-	<h2>NFL</h2>
-	<ul>
-		{% for event in NFL_events %}
-	    <li><a href = "{{url_for('main.game_detail', game_id=event.idEvent)}}">{{event.strHomeTeam}} {{event.intHomeScore}} vs {{event.strAwayTeam}} {{event.intAwayScore}} on {{event.dateEventLocal}}</a></li>
-		{% endfor %}
-	</ul>
-	<h2>MLB</h2>
-	<ul>
-		{% for event in MLB_events %}
-	    <li><a href = "{{url_for('main.game_detail', game_id=event.idEvent)}}">{{event.strHomeTeam}} {{event.intHomeScore}} vs {{event.strAwayTeam}} {{event.intAwayScore}} on {{event.dateEventLocal}}</a></li>
-		{% endfor %}
-	</ul>
-	<h2>NBA</h2>
-	<ul>
-		{% for event in NBA_events %}
-	    <li><a href = "{{url_for('main.game_detail', game_id=event.idEvent)}}">{{event.strHomeTeam}} {{event.intHomeScore}} vs {{event.strAwayTeam}} {{event.intAwayScore}} on {{event.dateEventLocal}}</a></li>
-		{% endfor %}
-	</ul>
-	<h2>MLS</h2>
-	<ul>
-		{% for event in MLS_events %}
-	    <li><a href = "{{url_for('main.game_detail', game_id=event.idEvent)}}">{{event.strHomeTeam}} {{event.intHomeScore}} vs {{event.strAwayTeam}} {{event.intAwayScore}} on {{event.dateEventLocal}}</a></li>
-		{% endfor %}
-	</ul>
-	<h2>NHL</h2>
-	<ul>
-		{% for event in NHL_events %}
-	    <li><a href = "{{url_for('main.game_detail', game_id=event.idEvent)}}">{{event.strHomeTeam}} {{event.intHomeScore}} vs {{event.strAwayTeam}} {{event.intAwayScore}} on {{event.dateEventLocal}}</a></li>
-		{% endfor %}
-	</ul>    
+	{% for league in leagues %}
+		<h2>{{ league.strLeague }}</h2>
+		<ul>
+			{% for event in sport_client.getLeagueLastFifteen(league_id = league.idLeague) %}
+		    <li><a href = "{{url_for('main.game_detail', game_id=event.idEvent)}}">{{ event.getEventDescription(True) }}</a></li>
+			{% endfor %}
+		</ul>
+	{% endfor %}
 </div>
 {% endblock %}

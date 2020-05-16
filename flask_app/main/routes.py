@@ -48,13 +48,7 @@ def leagues():
 
 @main.route('/events')
 def events():
-
-    nfl_events = sport_client.getLeagueLastFifteen(league_id = NFL_ID)
-    mlb_events = sport_client.getLeagueLastFifteen(league_id = MLB_ID)
-    nba_events = sport_client.getLeagueLastFifteen(league_id = NBA_ID)
-    mls_events = sport_client.getLeagueLastFifteen(league_id = MLS_ID)
-    nhl_events = sport_client.getLeagueLastFifteen(league_id = NHL_ID)
-    return render_template('events.html', NFL_events = nfl_events, MLB_events = mlb_events, NBA_events = nba_events,MLS_events = mls_events,NHL_events = nhl_events)
+    return render_template('events.html', leagues=sport_client.getLeagues("United States"), sport_client=sport_client)
 
 @main.route('/search-results/<query>', methods=['GET'])
 def query_results(query):
