@@ -105,12 +105,11 @@ def game_detail(game_id):
         mongo_lock.acquire()
         new_subscriptions = user.game_subscriptions
         new_subscriptions.remove(int(game_id))
-        print(current_user.modify(game_subscriptions=new_subscriptions))
+        current_user.modify(game_subscriptions=new_subscriptions)
         mongo_lock.release()
         return redirect(request.path)
 
     if not subscribed and subscription_form.validate_on_submit():
-        print('subscribing')
         user = User.objects(username=current_user.username).first()
         mongo_lock.acquire()
         current_user.modify(game_subscriptions=user.game_subscriptions + [game_id])
