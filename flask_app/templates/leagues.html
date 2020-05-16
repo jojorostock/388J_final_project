@@ -1,8 +1,12 @@
 {% extends "header.html" %}
 {% block content %}
-<div style="position:absolute;top:70;left:0;">
+<div class="league-list">
+	<ul>
     {% for league in leaguesList %}
-    <h2><a href="{{url_for('main.league_detail', league_id=league.idLeague)}}">{{league.strLeague}}</a></h2>
+    <li><h2><a href="{{url_for('main.league_detail', league_id=league.idLeague)}}">{{league.strLeague}}</a> <img class="league-list-image" src="{{league.strBadge}}">
+    </h2>
+	</li>
     {% endfor %}    
+	</ul>
 </div>
 {% endblock %}

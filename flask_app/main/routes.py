@@ -25,7 +25,7 @@ from flask_app.utils import current_time
 NFL_ID = 4391
 MLB_ID = 4424
 NBA_ID = 4387
-MLS_ID = 4340
+MLS_ID = 4346
 NHL_ID = 4380
 
 
@@ -44,8 +44,11 @@ def home():
 @main.route('/leagues')
 def leagues():
     # ls = api.Search().Leagues(country="England",sport="Soccer")
-    ls = sport_client.getLeagues("United States")
-    return render_template('leagues.html', leaguesList = ls)
+    ls = [NFL_ID, MLB_ID, NBA_ID, MLS_ID, NHL_ID]
+    leagues = []
+    for league in ls:
+        leagues = leagues + [sport_client.getLeagueByID(league)]
+    return render_template('leagues.html', leaguesList = leagues)
 
 @main.route('/events')
 def events():
