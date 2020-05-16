@@ -28,6 +28,25 @@
   </div>
 </div>
 
+{% if current_user.is_authenticated %}
+{# Subscription/Unsubscription forms #}
+<div class="row">
+  <div class="col">
+    <form method="POST" action="">
+      <div class="form-group">
+      {% if subscribed %}
+        {{ unsubscription_form.csrf_token }}
+        {{ unsubscription_form.submit() }}
+      {% else %}
+        {{ subscription_form.csrf_token }}
+        {{ subscription_form.submit() }}
+      {% endif %}
+    </div>
+    </form>
+  </div>
+</div>
+{% endif %}
+
 {# Comments #}
 <div class="row">
   <div class="col-md-12">
@@ -57,21 +76,21 @@
 <div class="row">
   <div class="col">
     <form method="POST" action="">
-      {{ form.csrf_token }}
+      {{ comment_form.csrf_token }}
       <div class="form-group">
-        {{ form.text.label }}
-        {{ form.text(class="form-control") }}
+        {{ comment_form.text.label }}
+        {{ comment_form.text(class="form-control") }}
 
-        {% if form.text.errors %}
+        {% if comment_form.text.errors %}
         <div class="alert alert-warning" role="alert">
-          {% for error in form.text.errors %}
+          {% for error in comment_form.text.errors %}
           <span>{{ error }}</span>
           {% endfor %}
         </div>
         {% endif %}
 
       </div>
-      {{ form.submit() }}
+      {{ comment_form.submit() }}
     </form>
   </div>
 </div>

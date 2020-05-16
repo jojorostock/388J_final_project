@@ -70,3 +70,9 @@ class UpdateProfilePicForm(FlaskForm):
     ])
     submit = SubmitField('Update')
 
+class NotificationSubscriptionForm(FlaskForm):
+    submit = SubmitField('Subscribe')
+
+class NotificationUnsubscriptionForm(FlaskForm):
+    submit = SubmitField('Unsubscribe')
+

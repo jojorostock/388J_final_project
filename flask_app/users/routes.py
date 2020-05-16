@@ -29,7 +29,9 @@ def user_detail(username):
 
     mongo_lock.release()
 
-    return render_template('user_detail.html', username=username, comments=comments, client=sport_client)
+    game_subscriptions = User.objects(username=current_user.username).first().game_subscriptions
+
+    return render_template('user_detail.html', username=username, comments=comments, client=sport_client, game_subscriptions=game_subscriptions)
 
 
 """ ************ User Management views ************ """
@@ -93,7 +95,8 @@ def account():
         mongo_lock.release()
         return redirect(url_for('users.account'))
 
-    return render_template("account.html", title="Account", username_form=username_form, profile_pic_form=profile_pic_form)
+    return render_template("account.html", title="Account", username_form=username_form,
+        profile_pic_form=profile_pic_form)
 
 @users.route("/tfa")
 def tfa():

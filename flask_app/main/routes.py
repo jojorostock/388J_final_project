@@ -15,7 +15,8 @@ import base64
 # local
 from flask_app import bcrypt, mongo_lock, session, messaging, sport_client
 from flask_app.forms import (SearchForm, GameCommentForm, RegistrationForm, LoginForm,
-                             UpdateUsernameForm, UpdateProfilePicForm)
+                             UpdateUsernameForm, UpdateProfilePicForm,
+                             NotificationSubscriptionForm, NotificationUnsubscriptionForm)
 from flask_app.models import User, Comment, load_user
 from flask_app.utils import current_time
 
@@ -74,11 +75,14 @@ def game_detail(game_id):
     # if type(result) == dict:
     #     return render_template('game_detail.html', error_msg=result['Error'])
 
-    form = GameCommentForm()
-    if form.validate_on_submit():
+    subscription_form = NotificationSubscriptionForm()
+    unsubscription_form = NotificationUnsubscriptionForm()
+    comment_form = GameCommentForm()
+
+    if comment_form.validate_on_submit():
         comment = Comment(
             commenter=load_user(current_user.username), 
-            content=form.text.data, 
+            content=comment_form.text.data,
             date=current_time(),
             game_id=game_id,
         )
@@ -87,6 +91,27 @@ def game_detail(game_id):
         comment.save()
         mongo_lock.release()
 
+        return redirect(request.path)
+
+    subscribed = False
+    if current_user.is_authenticated and User.objects(username=current_user.username).first().game_subscriptions.count(int(game_id)) is not 0:
+        subscribed = True
+
+    if subscribed and unsubscription_form.validate_on_submit():
+        user = User.objects(username=current_user.username).first()
+        mongo_lock.acquire()
+        new_subscriptions = user.game_subscriptions
+        new_subscriptions.remove(int(game_id))
+        print(current_user.modify(game_subscriptions=new_subscriptions))
+        mongo_lock.release()
+        return redirect(request.path)
+
+    if not subscribed and subscription_form.validate_on_submit():
+        print('subscribing')
+        user = User.objects(username=current_user.username).first()
+        mongo_lock.acquire()
+        current_user.modify(game_subscriptions=user.game_subscriptions + [game_id])
+        mongo_lock.release()
         return redirect(request.path)
 
     mongo_lock.acquire()
@@ -101,8 +126,8 @@ def game_detail(game_id):
             'content': r.content,
         })
 
-
-    return render_template('game_detail.html', form=form, game=result, comments=comments)
+    return render_template('game_detail.html', comment_form=comment_form, game=result, comments=comments,
+        subscription_form=subscription_form, unsubscription_form=unsubscription_form, subscribed=subscribed)
 
 @main.route('/teams/<team_id>', methods=['GET', 'POST'])
 def team_detail(team_id):

@@ -14,6 +14,7 @@ class User(db.Document, UserMixin):
     password = db.StringField(required=True)
     profile_pic = db.ImageField()
     otp_secret = db.StringField(required=True, min_length=16, max_length=16, default=pyotp.random_base32())
+    game_subscriptions = db.ListField(db.IntField())
 
     # Returns unique string identifying our object
     def get_id(self):
