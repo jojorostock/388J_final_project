@@ -96,7 +96,7 @@ def account():
         return redirect(url_for('users.account'))
 
     return render_template("account.html", title="Account", username_form=username_form,
-        profile_pic_form=profile_pic_form)
+        profile_pic_form=profile_pic_form, user=User.objects(username=current_user.username).first())
 
 @users.route("/tfa")
 def tfa():

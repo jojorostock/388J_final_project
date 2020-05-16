@@ -8,6 +8,8 @@ from wtforms.validators import (InputRequired, DataRequired, NumberRange, Length
 import pyotp
 
 from .models import User
+from flask_app import messaging
+from twilio.base.exceptions import TwilioRestException
 
 class SearchForm(FlaskForm):
     search_query = StringField('Query', validators=[InputRequired(), Length(min=1, max=100)])
@@ -29,10 +31,16 @@ class RegistrationForm(FlaskForm):
     def validate_phone(self, phone):
         if type(phone.data) is not int:
             raise ValidationError('Phone number must not contain non-numeric characters')
-        first_digit = phone.data / 10000000000
+        first_digit = int(phone.data / 10000000000)
         print('first_digit: ' + str(first_digit))
         if (first_digit < 1 or first_digit > 9):
             raise ValidationError('Phone number must 11 digits. Make sure to include country code and area code.')
+
+        try:
+            message = messaging.twilio_client.messages.create(to='+' + str(phone.data), from_=messaging.twilio_send_number,
+                                   body="You have successfully registered your phone number!")
+        except TwilioRestException as e:
+            raise ValidationError(e.msg + ' Make sure that the phone number has been registered as a verified number with the Twilio trial account.')
 
     def validate_username(self, username):
         user = User.objects(username=username.data).first()

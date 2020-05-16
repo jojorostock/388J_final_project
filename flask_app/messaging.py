@@ -2,7 +2,7 @@ from twilio.rest import Client
 import os
 from threading import Timer
 from threading import Lock
-from . import mongo_lock
+from . import mongo_lock, sport_client
 from flask_app.models import User
 
 account_sid = os.environ.get('TWILIO_ACCOUNT_SID')
@@ -19,7 +19,10 @@ def send_scheduled_messages():
 	mongo_lock.acquire()
 	# todo: check mongo for current notifications, call send_message() for every one,
 	# and update mongo to show that the message has been sent
-	# for user in User.objects():
+	for user in User.objects():
+		for subscription in user.game_subscriptions:
+			game = sport_client.getEventByID(subscription)
+			print(game.dateEventLocal)
 
 	mongo_lock.release()
 

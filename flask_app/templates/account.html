@@ -7,6 +7,12 @@
 </div>
 <div class="row">
     <div class="col">
+        <h3>Phone number: {{ user.phone_number }}</h3>
+        <h3>Email: {{ user.email }}</h3>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
         <form action="" method="post">
             {{ username_form.csrf_token }}
             <div class="form-group">
