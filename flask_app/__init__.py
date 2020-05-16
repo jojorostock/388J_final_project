@@ -27,7 +27,7 @@ login_manager = LoginManager(app)
 login_manager.login_view = 'users.login'
 bcrypt = Bcrypt(app)
 
-client2 = SportClient("1")
+sport_client = SportClient("1")
 
 from . import messaging
 # start messaging timer

@@ -13,7 +13,7 @@ import io
 import base64
 
 # local
-from flask_app import bcrypt, client, mongo_lock, session, messaging, client2
+from flask_app import bcrypt, mongo_lock, session, messaging, sport_client
 from flask_app.forms import (SearchForm, GameCommentForm, RegistrationForm, LoginForm,
                              UpdateUsernameForm, UpdateProfilePicForm)
 from flask_app.models import User, Comment, load_user
@@ -43,22 +43,22 @@ def home():
 @main.route('/leagues')
 def leagues():
     # ls = api.Search().Leagues(country="England",sport="Soccer")
-    ls = client2.getLeagues("United States")
+    ls = sport_client.getLeagues("United States")
     return render_template('leagues.html', leaguesList = ls)
 
 @main.route('/events')
 def events():
 
-    nfl_events = client2.getLeagueLastFifteen(league_id = NFL_ID)
-    mlb_events = client2.getLeagueLastFifteen(league_id = MLB_ID)
-    nba_events = client2.getLeagueLastFifteen(league_id = NBA_ID)
-    mls_events = client2.getLeagueLastFifteen(league_id = MLS_ID)
-    nhl_events = client2.getLeagueLastFifteen(league_id = NHL_ID)
+    nfl_events = sport_client.getLeagueLastFifteen(league_id = NFL_ID)
+    mlb_events = sport_client.getLeagueLastFifteen(league_id = MLB_ID)
+    nba_events = sport_client.getLeagueLastFifteen(league_id = NBA_ID)
+    mls_events = sport_client.getLeagueLastFifteen(league_id = MLS_ID)
+    nhl_events = sport_client.getLeagueLastFifteen(league_id = NHL_ID)
     return render_template('events.html', NFL_events = nfl_events, MLB_events = mlb_events, NBA_events = nba_events,MLS_events = mls_events,NHL_events = nhl_events)
 
 @main.route('/search-results/<query>', methods=['GET'])
 def query_results(query):
-    results = client2.searchTeams(query)
+    results = sport_client.searchTeams(query)
 
     if type(results) == dict:
         return render_template('query.html', error_msg=results['Error'])
@@ -67,15 +67,15 @@ def query_results(query):
 
 @main.route('/leagues/<league_id>', methods=['GET', 'POST'])
 def league_detail(league_id):
-    result = client2.getLeagueByID(league_id)
-    teams = client2.getTeamsInALeague(league_id)
+    result = sport_client.getLeagueByID(league_id)
+    teams = sport_client.getTeamsInALeague(league_id)
 
     return render_template('league_detail.html', league=result, teams=teams)
 
 
 @main.route('/games/<game_id>', methods=['GET', 'POST'])
 def game_detail(game_id):
-    result = client2.getEventByID(game_id)
+    result = sport_client.getEventByID(game_id)
 
     # if type(result) == dict:
     #     return render_template('game_detail.html', error_msg=result['Error'])
@@ -112,9 +112,9 @@ def game_detail(game_id):
 
 @main.route('/teams/<team_id>', methods=['GET', 'POST'])
 def team_detail(team_id):
-    result = client2.getTeamByID(team_id)
-    lastFive = client2.getTeamLastFive(team_id)
-    nextFive = client2.getTeamLastFive(team_id, nextFive=True)
+    result = sport_client.getTeamByID(team_id)
+    lastFive = sport_client.getTeamLastFive(team_id)
+    nextFive = sport_client.getTeamLastFive(team_id, nextFive=True)
 
     # if type(result) == dict:
     #     return render_template('game_detail.html', error_msg=result['Error'])
