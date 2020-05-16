@@ -16,7 +16,8 @@
       </div>
       <div class="card-body">
         <ul class="list-group list-group-flush">
-          <li class="list-group-item"><b>Logo: </b><img src="{{ team.strTeamBadge }}" class="mr-3 movie" alt="missing"></li>
+
+          <li class="list-group-item"><img class="team-image" src="{{team.strTeamBadge}}"></li>
           {% if team.strDescriptionEN %}
           <li class="list-group-item"><b>Description:</b> {{ team.strDescriptionEN }}</li>
           {% endif %}

@@ -22,6 +22,8 @@ movie {
 .comment-pic {
     max-width: 64px;
 }
-/* .nav-user {
-    border-right: 1px #1d1d1d;
-} */
+
+.team-image {
+    width: 250px;
+    height: 250px;
+}
