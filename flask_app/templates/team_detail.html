@@ -12,36 +12,49 @@
   <div class="col">
     <div class="card text-center">
       <div class="card-header">
-        {{ team.strTeam }} (<a href="{{url_for('main.league_detail', league_id=team.idLeague)}}">{{ team.strLeague }}</a>)
+        <row class="row justify-content-center name-col">
+          <div class="col-7 named-column">
+            {{ team.strTeam }} (<a href="{{url_for('main.league_detail', league_id=team.idLeague)}}" class="team-image">{{ team.strLeague }}</a>)
+          </div>
+          <div class="col-5">
+            <img class="team-image" src="{{team.strTeamBadge}}">
+          </div>
+        </row>
       </div>
       <div class="card-body">
         <ul class="list-group list-group-flush">
 
-          <li class="list-group-item"><img class="team-image" src="{{team.strTeamBadge}}"></li>
+          
           {% if team.strDescriptionEN %}
           <li class="list-group-item"><b>Description:</b> {{ team.strDescriptionEN }}</li>
           {% endif %}
           <li class="list-group-item">
+            <row class="row justify-content-center name-col">
             {% if teamLastFive %}
+            <div class="col-6">
               <b>Recent Games:</b>
               <ul>
               {% for event in teamLastFive %}
-              <li>
+              <div>
                 <a href = "{{url_for('main.game_detail', game_id=event.idEvent)}}">{{event.strHomeTeam}} {{event.intHomeScore}} vs {{event.strAwayTeam}} {{event.intAwayScore}} on {{event.dateEventLocal}}</a>
-              </li>
+              </div>
               {% endfor %}
               </ul>
+            </div>
             {% endif %}
             {% if teamNextFive %}
+            <div class="col-6">
               <b>Upcoming Games:</b>
               <ul>
               {% for event in teamNextFive %}
-              <li>
+              <div>
                 <a href = "{{url_for('main.game_detail', game_id=event.idEvent)}}">{{event.strHomeTeam}} vs {{event.strAwayTeam}} on {{event.dateEventLocal}}</a>
-              </li>
+              </div>
               {% endfor %}
               </ul>
+            </div>
             {% endif %}
+          </row>
           </li>
         </ul>
       </div>

@@ -12,11 +12,17 @@
   <div class="col">
     <div class="card text-center">
       <div class="card-header">
-        {{ league.strLeague }} ({{ league.strSport }})
+        <row class="row justify-content-center">
+          <div class="col-7 named-column">
+          {{ league.strLeague }} ({{ league.strSport }})
+          </div>
+          <div class="col-5">
+            <img src="{{ league.strBadge }}" class="team-image" alt="missing">
+          </div>
+        </row>
       </div>
       <div class="card-body">
         <ul class="list-group list-group-flush">
-          <li class="list-group-item"><b>Logo: </b><img src="{{ league.strBadge }}" class="mr-3 movie" alt="missing"></li>
           {% if league.strDescriptionEN %}
           <li class="list-group-item"><b>Description:</b> {{ league.strDescriptionEN }}</li>
           {% endif %}
@@ -25,11 +31,11 @@
               <b>Teams:</b>
               <ul>
               {% for team in teams %}
-              <div class="media">
-                <img src="{{ team.strTeamBadge }}" class="mr-3 movie" alt="missing">
-                <div class="media-body">
+              <div class="media" >
+                <img src="{{ team.strTeamBadge }}" class="team-image" alt="missing">
+                <div class="media-body named-column">
                 
-                <h5 class="mt-0"><a href="{{url_for('main.team_detail', team_id=team.idTeam)}}">{{ team.strTeam }}</a></h5>
+                <h5 class="mt-0"><a href="{{url_for('main.team_detail', team_id=team.idTeam)}}" style="font-size: xx-large;">{{ team.strTeam }}</a></h5>
                 </div>
               </div>
               {% endfor %}

@@ -3,9 +3,9 @@
 <div class="league-list">
 	<ul>
     {% for league in leaguesList %}
-    <li><h2><a href="{{url_for('main.league_detail', league_id=league.idLeague)}}">{{league.strLeague}}</a> <img class="league-list-image" src="{{league.strBadge}}">
-    </h2>
-	</li>
+    <div><h1> <img class="league-list-image" src="{{league.strBadge}}"><a href="{{url_for('main.league_detail', league_id=league.idLeague)}}">{{league.strLeague}}</a>
+    </h1>
+</div>
     {% endfor %}    
 	</ul>
 </div>
