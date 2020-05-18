@@ -14,12 +14,34 @@ from datetime import datetime
 # local
 from .client import SportClient
 
+# Talisman
+from flask_talisman import Talisman
+
+
 # lock to ensure synchronization of mongodb access
 mongo_lock = Lock()
 
 app = Flask(__name__)
 app.config['MONGODB_HOST'] = 'mongodb://localhost:27017/sport_database'
 app.config['SECRET_KEY'] = b'\x020;yr\x91\x11\xbe"\x9d\xc1\x14\x91\xadf\xec'
+
+# Talisman
+
+csp = {
+    'default-src': '\'self\'',
+    'img-src': '*',
+    'style-src': [
+        'https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css',
+        'http://127.0.0.1:5000/static/custom.css'
+    ],
+    'script-src': [
+        'https://code.jquery.com/jquery-3.4.1.slim.min.js',
+        'https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js',
+        'https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js'
+    ]
+}
+
+Talisman(app, content_security_policy=csp)
 
 # mongo = PyMongo(app)
 db = MongoEngine(app)
