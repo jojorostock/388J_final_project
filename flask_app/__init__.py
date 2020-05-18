@@ -115,6 +115,17 @@ mongo_lock.acquire()
 comment.save()
 mongo_lock.release()
 
+comment = Comment(
+            commenter=load_user(user.username), 
+            content='What is a steeler they should be the Pittsburgh Giraffes',
+            date='2020-04-10',
+            game_id='673825',
+        )
+
+mongo_lock.acquire()
+comment.save()
+mongo_lock.release()
+
 # Perkins
 
 hashed = bcrypt.generate_password_hash("vens").decode("utf-8")
