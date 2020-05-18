@@ -11,7 +11,7 @@
 <div class="row">
   <div class="col">
     <div class="card text-center">
-      <div class="card-header">
+      <div class="card-header bg-dark text-white">
         <row class="row justify-content-center">
           <div class="col-7 named-column">
           {{ league.strLeague }} ({{ league.strSport }})
@@ -32,7 +32,7 @@
               <ul>
               {% for team in teams %}
               <div class="media" >
-                <img src="{{ team.strTeamBadge }}" class="team-image" alt="missing">
+                <img src="{{ team.strTeamBadge }}" class="league-team-image" alt="missing">
                 <div class="media-body named-column">
                 
                 <h5 class="mt-0"><a href="{{url_for('main.team_detail', team_id=team.idTeam)}}" style="font-size: xx-large;">{{ team.strTeam }}</a></h5>

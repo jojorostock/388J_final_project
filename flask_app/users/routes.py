@@ -29,7 +29,7 @@ def user_detail(username):
 
     mongo_lock.release()
 
-    game_subscriptions = User.objects(username=current_user.username).first().game_subscriptions
+    game_subscriptions = User.objects(username=user.username).first().game_subscriptions
 
     return render_template('user_detail.html', username=username, comments=comments, client=sport_client, game_subscriptions=game_subscriptions)
 

@@ -21,16 +21,25 @@
 				<a href = "{{url_for('main.team_detail', team_id=event.idHomeTeam)}}">{{ event.strHomeTeam }}</a>
 			</td>
 			<td>
-				{{ event.intHomeScore }}
+				{% if event.intHomeScore %}
+					{{ event.intHomeScore }}
+				{% endif %}
 			</td>
 			<td>
 				<a href = "{{url_for('main.team_detail', team_id=event.idAwayTeam)}}">{{ event.strAwayTeam }}</a>
 			</td>
 			<td>
-				{{ event.intAwayScore }}
+				{% if event.intAwayScore %}
+					{{ event.intAwayScore }}
+				{% endif %}
 			</td>
 			<td>
-				<a href = "{{url_for('main.game_detail', game_id=event.idEvent)}}">{{ event.dateEventLocal }}</a>
+				{% if event.dateEventLocal %}
+					<a href = "{{url_for('main.game_detail', game_id=event.idEvent)}}">{{ event.dateEventLocal }}</a>
+				{% else %}
+					<a href = "{{url_for('main.game_detail', game_id=event.idEvent)}}">Details</a>
+				{% endif %}
+				
 			</td>
 		</tr>
 		{% endfor %}

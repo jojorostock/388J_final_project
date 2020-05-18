@@ -32,6 +32,11 @@ movie {
     height: 250px;
 }
 
+.league-team-image {
+    width: 125px;
+    height: 125px;
+}
+
 .league-list {
 	position:absolute;
 	top:70;
