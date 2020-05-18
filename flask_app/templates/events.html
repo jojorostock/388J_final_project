@@ -1,13 +1,42 @@
 {% extends "header.html" %}
 {% block content %}
-<div style="position:absolute;top:70;left:0;">
+<div style="top:70;left:0;">
+	
 	{% for league in leagues %}
-		<h2>{{ league.strLeague }}</h2>
-		<ul>
-			{% for event in sport_client.getLeagueLastFifteen(league_id = league.idLeague) %}
-		    <li><a href = "{{url_for('main.game_detail', game_id=event.idEvent)}}">{{ event.getEventDescription(True) }}</a></li>
-			{% endfor %}
-		</ul>
+	<h2 style ="text-align: center; padding-top: 25;">{{ league.strLeague }}</h2>
+	<table class="table table-striped" style="width:100%"> 
+	<thead>
+		<th>Home Team</th>
+		<th>Home Score</th>
+		<th>Away Team</th>
+		<th>Away Score</th>
+		<th>Date and Game Details</th>
+
+
+	</thead>
+	<tbody>
+		{% for event in sport_client.getLeagueLastFifteen(league_id = league.idLeague) %}
+		<tr>
+			<td>
+				<a href = "{{url_for('main.team_detail', team_id=event.idHomeTeam)}}">{{ event.strHomeTeam }}</a>
+			</td>
+			<td>
+				{{ event.intHomeScore }}
+			</td>
+			<td>
+				<a href = "{{url_for('main.team_detail', team_id=event.idAwayTeam)}}">{{ event.strAwayTeam }}</a>
+			</td>
+			<td>
+				{{ event.intAwayScore }}
+			</td>
+			<td>
+				<a href = "{{url_for('main.game_detail', game_id=event.idEvent)}}">{{ event.dateEventLocal }}</a>
+			</td>
+		</tr>
+		{% endfor %}
+	</tbody>
+	</table>
 	{% endfor %}
+
 </div>
 {% endblock %}
