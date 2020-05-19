@@ -63,27 +63,27 @@ if userTest is None:
     user.save()
     mongo_lock.release()
 
-comment = Comment(
-            commenter=load_user(user.username), 
-            content='Great Game!!!!!!!!!',
-            date='2020-03-09',
-            game_id='673964',
-        )
+    comment = Comment(
+                commenter=load_user(user.username), 
+                content='Great Game!!!!!!!!!',
+                date='2020-03-09',
+                game_id='673964',
+            )
 
-mongo_lock.acquire()
-comment.save()
-mongo_lock.release()
+    mongo_lock.acquire()
+    comment.save()
+    mongo_lock.release()
 
-comment = Comment(
-            commenter=load_user(user.username), 
-            content='Super bowl is next 49ers going down',
-            date='2020-03-09',
-            game_id='673726',
-        )
+    comment = Comment(
+                commenter=load_user(user.username), 
+                content='Super bowl is next 49ers going down',
+                date='2020-03-09',
+                game_id='673726',
+            )
 
-mongo_lock.acquire()
-comment.save()
-mongo_lock.release()
+    mongo_lock.acquire()
+    comment.save()
+    mongo_lock.release()
 
 # Niners Fan
 
@@ -95,27 +95,27 @@ if userTest is None:
     user.save()
     mongo_lock.release()
 
-comment = Comment(
-            commenter=load_user(user.username), 
-            content='This is the worst Jimmy G needs to go',
-            date='2020-03-09',
-            game_id='673964',
-        )
+    comment = Comment(
+                commenter=load_user(user.username), 
+                content='This is the worst Jimmy G needs to go',
+                date='2020-03-09',
+                game_id='673964',
+            )
 
-mongo_lock.acquire()
-comment.save()
-mongo_lock.release()
+    mongo_lock.acquire()
+    comment.save()
+    mongo_lock.release()
 
-comment = Comment(
-            commenter=load_user(user.username), 
-            content='You wish @chiefsFan1234',
-            date='2020-03-09',
-            game_id='673726',
-        )
+    comment = Comment(
+                commenter=load_user(user.username), 
+                content='You wish @chiefsFan1234',
+                date='2020-03-09',
+                game_id='673726',
+            )
 
-mongo_lock.acquire()
-comment.save()
-mongo_lock.release()
+    mongo_lock.acquire()
+    comment.save()
+    mongo_lock.release()
 
 
 # The Herminator
@@ -128,27 +128,27 @@ if userTest is None:
     user.save()
     mongo_lock.release()
 
-comment = Comment(
-            commenter=load_user(user.username), 
-            content='This was a fun game but next time I would like to sit in a closer row',
-            date='2020-04-10',
-            game_id='673964',
-        )
+    comment = Comment(
+                commenter=load_user(user.username), 
+                content='This was a fun game but next time I would like to sit in a closer row',
+                date='2020-04-10',
+                game_id='673964',
+            )
 
-mongo_lock.acquire()
-comment.save()
-mongo_lock.release()
+    mongo_lock.acquire()
+    comment.save()
+    mongo_lock.release()
 
-comment = Comment(
-            commenter=load_user(user.username), 
-            content='What is a steeler they should be the Pittsburgh Giraffes',
-            date='2020-04-10',
-            game_id='673825',
-        )
+    comment = Comment(
+                commenter=load_user(user.username), 
+                content='What is a steeler they should be the Pittsburgh Giraffes',
+                date='2020-04-10',
+                game_id='673825',
+            )
 
-mongo_lock.acquire()
-comment.save()
-mongo_lock.release()
+    mongo_lock.acquire()
+    comment.save()
+    mongo_lock.release()
 
 # Perkins
 
@@ -160,16 +160,16 @@ if userTest is None:
     user.save()
     mongo_lock.release()
 
-comment = Comment(
-            commenter=load_user(user.username), 
-            content='Lamar still the MVP we will win it next year',
-            date='2020-04-10',
-            game_id='673723',
-        )
+    comment = Comment(
+                commenter=load_user(user.username), 
+                content='Lamar still the MVP we will win it next year',
+                date='2020-04-10',
+                game_id='673723',
+            )
 
-mongo_lock.acquire()
-comment.save()
-mongo_lock.release()
+    mongo_lock.acquire()
+    comment.save()
+    mongo_lock.release()
 
 
 sport_client = SportClient("1")
