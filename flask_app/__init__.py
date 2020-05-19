@@ -18,7 +18,8 @@ from .client import SportClient
 mongo_lock = Lock()
 
 app = Flask(__name__)
-app.config['MONGODB_HOST'] = 'mongodb://localhost:27017/sport_database'
+# app.config['MONGODB_HOST'] = 'mongodb://localhost:27017/sport_database'
+app.config['MONGODB_HOST'] = 'mongodb://heroku_19g2tpxk:s6eiqvrsbqkemi9537gmlbk7qo@ds133104.mlab.com:33104/heroku_19g2tpxk?retryWrites=false'
 app.config['SECRET_KEY'] = b'\x020;yr\x91\x11\xbe"\x9d\xc1\x14\x91\xadf\xec'
 
 # mongo = PyMongo(app)
