@@ -71,7 +71,7 @@ class LoginForm(FlaskForm):
                 raise ValidationError("Invalid Token")
 
 class UpdateUsernameForm(FlaskForm):
-    username = StringField('Username', validators=[InputRequired(), Length(min=1, max=40)])
+    username = StringField('Change Username', validators=[InputRequired(), Length(min=1, max=40)])
     submit = SubmitField('Update Username')
 
     def validate_username(self, username):
