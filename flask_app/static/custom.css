@@ -48,3 +48,21 @@ movie {
 	height: 50px;
 }
 
+.xxl {
+    font-size: xx-large;
+}
+
+.center-and-padded {
+    text-align: center;
+    padding-top: 25;
+}
+
+.events {
+    top:70;
+    left:0;
+}
+
+.full-width {
+    width: 100%;
+    
+}

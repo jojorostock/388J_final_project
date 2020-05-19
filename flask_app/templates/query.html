@@ -11,7 +11,7 @@
         <img src="{{ team.strTeamBadge }}" class="league-team-image" alt="missing">
         <div class="media-body named-column">
         
-        <h5 class="mt-0" style="font-size: xx-large;"><a href="{{url_for('main.team_detail', team_id=team.idTeam)}}">{{ team.strTeam }}</a> ({{ team.strLeague }})</h5>
+        <h5 class="mt-0 xxl"><a href="{{url_for('main.team_detail', team_id=team.idTeam)}}">{{ team.strTeam }}</a> ({{ team.strLeague }})</h5>
         </div>
     </div>
     {% endfor %}

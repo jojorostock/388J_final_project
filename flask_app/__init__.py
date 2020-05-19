@@ -33,7 +33,7 @@ csp = {
     'img-src': '*',
     'style-src': [
         'https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css',
-        'http://127.0.0.1:5000/static/custom.css'
+        'http://127.0.0.1:5000/static/custom.css',
         'https://cmsc388j-final-project.herokuapp.com/static/custom.css'
     ],
     'script-src': [
