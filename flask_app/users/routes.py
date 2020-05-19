@@ -15,7 +15,7 @@ import base64
 # local
 from flask_app import bcrypt, mongo_lock, session, messaging, sport_client
 from flask_app.forms import (SearchForm, GameCommentForm, RegistrationForm, LoginForm,
-                             UpdateUsernameForm, UpdateProfilePicForm)
+                             UpdateUsernameForm)
 from flask_app.models import User, Comment, load_user
 from flask_app.utils import current_time
 
@@ -85,7 +85,6 @@ def logout():
 @login_required
 def account():
     username_form = UpdateUsernameForm()
-    profile_pic_form = UpdateProfilePicForm()
 
     if username_form.validate_on_submit():
         # current_user.username = username_form.username.data
@@ -96,7 +95,7 @@ def account():
         return redirect(url_for('users.account'))
 
     return render_template("account.html", title="Account", username_form=username_form,
-        profile_pic_form=profile_pic_form, user=User.objects(username=current_user.username).first())
+        user=User.objects(username=current_user.username).first())
 
 @users.route("/tfa")
 def tfa():
