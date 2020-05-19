@@ -36,10 +36,10 @@
       <div class="form-group">
       {% if subscribed %}
         {{ unsubscription_form.csrf_token }}
-        {{ unsubscription_form.submit() }}
+        {{ unsubscription_form.submit(class="btn btn-outline-dark") }}
       {% else %}
         {{ subscription_form.csrf_token }}
-        {{ subscription_form.submit() }}
+        {{ subscription_form.submit(class="btn btn-outline-dark") }}
       {% endif %}
     </div>
     </form>
@@ -90,7 +90,7 @@
         {% endif %}
 
       </div>
-      {{ comment_form.submit() }}
+      {{ comment_form.submit(class="btn btn-outline-dark") }}
     </form>
   </div>
 </div>
