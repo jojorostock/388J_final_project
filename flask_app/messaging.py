@@ -26,7 +26,7 @@ def send_scheduled_messages():
 				game_date = utils.extract_date_tuple(game.dateEventLocal)
 				curr_date = utils.current_date_tuple()
 
-			if game_date <= curr_date or game.dateEventLocal is None:
+			if game.dateEventLocal is None or game_date <= curr_date:
 				send_message(game.getEventDescription(True), user.phone_number)
 				new_subscriptions = user.game_subscriptions
 				new_subscriptions.remove(int(subscription))
