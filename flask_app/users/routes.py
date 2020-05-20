@@ -122,9 +122,7 @@ def qr_code():
     if 'new_username' not in session:
         return redirect(url_for('main.home'))
 
-    mongo_lock.acquire()
     user = User.objects(username=session['new_username']).first()
-    mongo_lock.release()
     session.pop('new_username')
 
     uri = pyotp.totp.TOTP(user.otp_secret).provisioning_uri(name=user.username, issuer_name='CMSC388J-2FA')
