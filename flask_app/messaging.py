@@ -10,7 +10,7 @@ from flask_login import current_user
 account_sid = os.environ.get('TWILIO_ACCOUNT_SID')
 auth_token = os.environ.get('TWILIO_AUTH_TOKEN')
 twilio_send_number = '+12057821165'
-twilio_timer_interval = 30.0
+twilio_timer_interval = 3.0
 
 twilio_client = Client(account_sid, auth_token)
 
@@ -18,6 +18,7 @@ def send_message(message, recipient):
 	message = twilio_client.messages.create(body=message, from_=twilio_send_number, to=recipient)
 
 def send_scheduled_messages():
+	print('sending')
 	mongo_lock.acquire()
 	for user in User.objects():
 		for subscription in user.game_subscriptions:
@@ -39,4 +40,4 @@ def send_scheduled_messages():
 	Timer(twilio_timer_interval, send_scheduled_messages).start()
 
 # start messaging timer
-Timer(twilio_timer_interval, send_scheduled_messages).start()
+twilio_timer = Timer(twilio_timer_interval, send_scheduled_messages).start()
