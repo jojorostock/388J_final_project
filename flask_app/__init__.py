@@ -54,14 +54,14 @@ bcrypt = Bcrypt(app)
 # Dummy User Data
 from flask_app.models import User, Comment, load_user
 
+mongo_lock.acquire()
+
 # Chiefs Fan
 hashed = bcrypt.generate_password_hash("password").decode("utf-8")
 user = User(username='chiefsFan1234', email="chiefsFan1234@yahoo.com", phone_number='+14109919959', password=hashed)
 userTest = User.objects(username=user.username).first()
 if userTest is None:
-    mongo_lock.acquire()
     user.save()
-    mongo_lock.release()
 
     comment = Comment(
                 commenter=load_user(user.username), 
@@ -70,9 +70,7 @@ if userTest is None:
                 game_id='673964',
             )
 
-    mongo_lock.acquire()
     comment.save()
-    mongo_lock.release()
 
     comment = Comment(
                 commenter=load_user(user.username), 
@@ -81,9 +79,7 @@ if userTest is None:
                 game_id='673726',
             )
 
-    mongo_lock.acquire()
     comment.save()
-    mongo_lock.release()
 
 # Niners Fan
 
@@ -91,9 +87,7 @@ hashed = bcrypt.generate_password_hash("password2").decode("utf-8")
 user = User(username='ninersForever', email="ninersForever@yahoo.com", phone_number='+14104434793', password=hashed)
 userTest = User.objects(username=user.username).first()
 if userTest is None:
-    mongo_lock.acquire()
     user.save()
-    mongo_lock.release()
 
     comment = Comment(
                 commenter=load_user(user.username), 
@@ -102,9 +96,7 @@ if userTest is None:
                 game_id='673964',
             )
 
-    mongo_lock.acquire()
     comment.save()
-    mongo_lock.release()
 
     comment = Comment(
                 commenter=load_user(user.username), 
@@ -113,9 +105,7 @@ if userTest is None:
                 game_id='673726',
             )
 
-    mongo_lock.acquire()
     comment.save()
-    mongo_lock.release()
 
 
 # The Herminator
@@ -124,9 +114,7 @@ hashed = bcrypt.generate_password_hash("giraffe").decode("utf-8")
 user = User(username='larryHerman', email="iLoveGiraffes@yahoo.com", phone_number='+14109912315', password=hashed)
 userTest = User.objects(username=user.username).first()
 if userTest is None:
-    mongo_lock.acquire()
     user.save()
-    mongo_lock.release()
 
     comment = Comment(
                 commenter=load_user(user.username), 
@@ -135,9 +123,7 @@ if userTest is None:
                 game_id='673964',
             )
 
-    mongo_lock.acquire()
     comment.save()
-    mongo_lock.release()
 
     comment = Comment(
                 commenter=load_user(user.username), 
@@ -146,9 +132,7 @@ if userTest is None:
                 game_id='673825',
             )
 
-    mongo_lock.acquire()
     comment.save()
-    mongo_lock.release()
 
 # Perkins
 
@@ -156,9 +140,7 @@ hashed = bcrypt.generate_password_hash("vens").decode("utf-8")
 user = User(username='pickNerkins', email="perks@yahoo.com", phone_number='+14432232086', password=hashed)
 userTest = User.objects(username=user.username).first()
 if userTest is None:
-    mongo_lock.acquire()
     user.save()
-    mongo_lock.release()
 
     comment = Comment(
                 commenter=load_user(user.username), 
@@ -167,12 +149,12 @@ if userTest is None:
                 game_id='673723',
             )
 
-    mongo_lock.acquire()
     comment.save()
-    mongo_lock.release()
 
 
 sport_client = SportClient("1")
+
+mongo_lock.release()
 
 from . import messaging
 # start messaging timer

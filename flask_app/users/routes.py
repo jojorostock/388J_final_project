@@ -26,13 +26,14 @@ def user_detail(username):
     mongo_lock.acquire()
     user = User.objects(username=username).first()
     comments = Comment.objects(commenter=user)
+    mongo_lock.release()
 
     if (user == None):
         return render_template('user_detail.html', error_msg=f'User {username} not found.')
 
-    mongo_lock.release()
-
+    mongo_lock.acquire()
     game_subscriptions = User.objects(username=user.username).first().game_subscriptions
+    mongo_lock.release()
 
     return render_template('user_detail.html', username=username, comments=comments, client=sport_client, game_subscriptions=game_subscriptions)
 
@@ -47,8 +48,8 @@ def register():
     if form.validate_on_submit():
         hashed = bcrypt.generate_password_hash(form.password.data).decode("utf-8")
 
-        user = User(username=form.username.data, email=form.email.data, phone_number='+' + str(form.phone.data), password=hashed)
         mongo_lock.acquire()
+        user = User(username=form.username.data, email=form.email.data, phone_number='+' + str(form.phone.data), password=hashed)
         user.save()
         mongo_lock.release()
 
@@ -97,8 +98,11 @@ def account():
         mongo_lock.release()
         return redirect(url_for('users.account'))
 
-    return render_template("account.html", title="Account", username_form=username_form,
-        user=User.objects(username=current_user.username).first())
+    mongo_lock.acquire()
+    user = User.objects(username=current_user.username).first()
+    mongo_lock.release()
+
+    return render_template("account.html", title="Account", username_form=username_form, user=user)
 
 @users.route("/tfa")
 def tfa():
@@ -118,7 +122,9 @@ def qr_code():
     if 'new_username' not in session:
         return redirect(url_for('main.home'))
 
+    mongo_lock.acquire()
     user = User.objects(username=session['new_username']).first()
+    mongo_lock.release()
     session.pop('new_username')
 
     uri = pyotp.totp.TOTP(user.otp_secret).provisioning_uri(name=user.username, issuer_name='CMSC388J-2FA')

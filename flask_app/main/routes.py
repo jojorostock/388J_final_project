@@ -100,12 +100,14 @@ def game_detail(game_id):
         return redirect(request.path)
 
     subscribed = False
+    mongo_lock.acquire()
     if current_user.is_authenticated and User.objects(username=current_user.username).first().game_subscriptions.count(int(game_id)) is not 0:
         subscribed = True
+    mongo_lock.release()
 
     if subscribed and unsubscription_form.validate_on_submit():
-        user = User.objects(username=current_user.username).first()
         mongo_lock.acquire()
+        user = User.objects(username=current_user.username).first()
         new_subscriptions = user.game_subscriptions
         new_subscriptions.remove(int(game_id))
         current_user.modify(game_subscriptions=new_subscriptions)
@@ -113,8 +115,8 @@ def game_detail(game_id):
         return redirect(request.path)
 
     if not subscribed and subscription_form.validate_on_submit():
-        user = User.objects(username=current_user.username).first()
         mongo_lock.acquire()
+        user = User.objects(username=current_user.username).first()
         current_user.modify(game_subscriptions=user.game_subscriptions + [game_id])
         mongo_lock.release()
         return redirect(request.path)
