@@ -2,14 +2,15 @@ from twilio.rest import Client
 import os
 from threading import Timer
 from threading import Lock
-from . import mongo_lock, sport_client, utils
+from flask_app.startup import mongo_lock, sport_client
+import flask_app.utils
 from flask_app.models import User
 from flask_login import current_user
 
 account_sid = os.environ.get('TWILIO_ACCOUNT_SID')
 auth_token = os.environ.get('TWILIO_AUTH_TOKEN')
 twilio_send_number = '+12057821165'
-twilio_timer_interval = 3.0
+twilio_timer_interval = 30.0
 
 twilio_client = Client(account_sid, auth_token)
 
@@ -23,8 +24,8 @@ def send_scheduled_messages():
 			game = sport_client.getEventByID(subscription)
 			print(game.dateEventLocal)
 			if game.dateEventLocal is not None:
-				game_date = utils.extract_date_tuple(game.dateEventLocal)
-				curr_date = utils.current_date_tuple()
+				game_date = flask_app.utils.extract_date_tuple(game.dateEventLocal)
+				curr_date = flask_app.utils.current_date_tuple()
 
 			if game.dateEventLocal is None or game_date <= curr_date:
 				send_message(game.getEventDescription(True), user.phone_number)
@@ -36,3 +37,6 @@ def send_scheduled_messages():
 
 	# reschedule the timer
 	Timer(twilio_timer_interval, send_scheduled_messages).start()
+
+# start messaging timer
+Timer(twilio_timer_interval, send_scheduled_messages).start()

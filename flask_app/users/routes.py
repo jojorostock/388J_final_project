@@ -13,7 +13,7 @@ import io
 import base64
 
 # local
-from flask_app import bcrypt, mongo_lock, session, messaging, sport_client
+from flask_app.startup import bcrypt, mongo_lock, session, sport_client
 from flask_app.forms import (SearchForm, GameCommentForm, RegistrationForm, LoginForm,
                              UpdateUsernameForm)
 from flask_app.models import User, Comment, load_user

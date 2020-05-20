@@ -7,7 +7,7 @@ from wtforms.validators import (InputRequired, DataRequired, NumberRange, Length
                                 EqualTo, ValidationError)
 import pyotp
 
-from .models import User
+from flask_app.models import User
 from flask_app import messaging
 from twilio.base.exceptions import TwilioRestException
 

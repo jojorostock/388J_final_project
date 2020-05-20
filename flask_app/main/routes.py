@@ -13,7 +13,8 @@ import io
 import base64
 
 # local
-from flask_app import bcrypt, mongo_lock, session, messaging, sport_client
+from flask_app.startup import bcrypt, mongo_lock, session, sport_client
+import flask_app.utils
 from flask_app.forms import (SearchForm, GameCommentForm, RegistrationForm, LoginForm,
                              UpdateUsernameForm, NotificationSubscriptionForm,
                              NotificationUnsubscriptionForm)
@@ -29,7 +30,7 @@ MLS_ID = 4346
 NHL_ID = 4380
 
 
-
+print('in routes.py')
 main = Blueprint("main", __name__)
 
 @main.route('/', methods=['GET', 'POST'])
