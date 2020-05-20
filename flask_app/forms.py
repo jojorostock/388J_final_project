@@ -23,7 +23,7 @@ class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[InputRequired(), Length(min=1, max=40)])
     email = StringField('Email', validators=[InputRequired(), Email()])
     phone = IntegerField('Phone Number', validators=[InputRequired()])
-    password = PasswordField('Password', validators=[InputRequired()])
+    password = PasswordField('Password', validators=[InputRequired(), Length(min=8, max=40)])
     confirm_password = PasswordField('Confirm Password', 
                                     validators=[InputRequired(), EqualTo('password')])
     submit = SubmitField('Sign Up')
@@ -41,6 +41,13 @@ class RegistrationForm(FlaskForm):
                                    body="You have successfully registered your phone number!")
         except TwilioRestException as e:
             raise ValidationError(e.msg + ' Make sure that the phone number has been registered as a verified number with the Twilio trial account.')
+
+    def validate_password(self, password):
+        if not any(char.isdigit() for char in password.data):
+            raise ValidationError('Password must contain at least one number')
+
+        if not any(char.isupper() for char in password.data):
+            raise ValidationError('Password must contain at least one uppercase letter')
 
     def validate_username(self, username):
         user = User.objects(username=username.data).first()
