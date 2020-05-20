@@ -56,6 +56,9 @@ from flask_app.models import User, Comment, load_user
 
 mongo_lock.acquire()
 
+User.objects().delete()
+Comment.objects().delete()
+
 # Chiefs Fan
 hashed = bcrypt.generate_password_hash("password").decode("utf-8")
 user = User(username='chiefsFan1234', email="chiefsFan1234@yahoo.com", phone_number='+14109919959', password=hashed)
