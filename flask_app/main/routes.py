@@ -68,6 +68,9 @@ def league_detail(league_id):
     result = sport_client.getLeagueByID(league_id)
     teams = sport_client.getTeamsInALeague(league_id)
 
+    if type(result) == dict:
+        return render_template('game_detail.html', error_msg=f'{result["Error"]}. League ID {league_id}')
+
     return render_template('league_detail.html', league=result, teams=teams)
 
 
@@ -75,8 +78,8 @@ def league_detail(league_id):
 def game_detail(game_id):
     result = sport_client.getEventByID(game_id)
 
-    # if type(result) == dict:
-    #     return render_template('game_detail.html', error_msg=result['Error'])
+    if type(result) == dict:
+        return render_template('game_detail.html', error_msg=f'{result["Error"]}. Game ID {game_id}')
 
     subscription_form = NotificationSubscriptionForm()
     unsubscription_form = NotificationUnsubscriptionForm()
@@ -134,11 +137,12 @@ def game_detail(game_id):
 @main.route('/teams/<team_id>', methods=['GET', 'POST'])
 def team_detail(team_id):
     result = sport_client.getTeamByID(team_id)
+
+    if type(result) == dict:
+        return render_template('game_detail.html', error_msg=f'{result["Error"]}. Team ID {team_id}')
+
     lastFive = sport_client.getTeamLastFive(team_id)
     nextFive = sport_client.getTeamLastFive(team_id, nextFive=True)
-
-    # if type(result) == dict:
-    #     return render_template('game_detail.html', error_msg=result['Error'])
 
     return render_template('team_detail.html', team=result, teamLastFive=lastFive, teamNextFive=nextFive)
 

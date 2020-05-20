@@ -2,7 +2,9 @@
 {% block content %}
 
 {% if error_msg %}
-<b>{{ error_msg }}</b>
+<div class="alert-primary">
+  {{ error_msg }}
+</div>
 {% endif %}
 
 {% if league %}

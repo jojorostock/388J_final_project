@@ -1,50 +1,59 @@
 {% extends "header.html" %}
 {% block content %}
-<div class="row">
-    <div class="col">
-        <h2>{{ username }}'s Profile</h2>
-    </div>
-</div>
 
-<div class="row">
-    <div class="col">
-        <h1> Comments <small class="float-right">{{ comments.count() }}</small></h1>
-        <ul class="media-list">
-            {% for comment in comments %}
-            <li class="media review-item">
-                <div class="media-body">
-                    <span class="float-right">
-                        <small>{{ comment.date }}</small>
-                    </span>
-                    <strong>For: <a href="{{ url_for('main.game_detail', game_id=comment.game_id) }}">
-                            {{ client.getEventByID(comment.game_id).getEventDescription() }}
-                        </a>
-                    </strong>
-                    <p>
-                        {{ comment.content }}
-                    </p>
-                </div>
-            </li>
-            {% endfor %}
-        </ul>
-    </div>
+{% if error_msg %}
+<div class="alert-primary">
+  {{ error_msg }}
 </div>
+{% endif %}
 
-<div class="row">
-    <div class="col">
-        <h1> Subscriptions <small class="float-right">{{ game_subscriptions|length }}</small></h1>
-        <ul class="media-list">
-            {% for subscription in game_subscriptions %}
-            <li class="media review-item">
-                <div class="media-body">
-                    <strong><a href="{{ url_for('main.game_detail', game_id=subscription) }}">
-                            {{ client.getEventByID(subscription).getEventDescription() }}
-                        </a>
-                    </strong>
-                </div>
-            </li>
-            {% endfor %}
-        </ul>
+{% if username %}
+    <div class="row">
+        <div class="col">
+            <h2>{{ username }}'s Profile</h2>
+        </div>
     </div>
-</div>
+
+    <div class="row">
+        <div class="col">
+            <h1> Comments <small class="float-right">{{ comments.count() }}</small></h1>
+            <ul class="media-list">
+                {% for comment in comments %}
+                <li class="media review-item">
+                    <div class="media-body">
+                        <span class="float-right">
+                            <small>{{ comment.date }}</small>
+                        </span>
+                        <strong>For: <a href="{{ url_for('main.game_detail', game_id=comment.game_id) }}">
+                                {{ client.getEventByID(comment.game_id).getEventDescription() }}
+                            </a>
+                        </strong>
+                        <p>
+                            {{ comment.content }}
+                        </p>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <h1> Subscriptions <small class="float-right">{{ game_subscriptions|length }}</small></h1>
+            <ul class="media-list">
+                {% for subscription in game_subscriptions %}
+                <li class="media review-item">
+                    <div class="media-body">
+                        <strong><a href="{{ url_for('main.game_detail', game_id=subscription) }}">
+                                {{ client.getEventByID(subscription).getEventDescription() }}
+                            </a>
+                        </strong>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endif %}
 {% endblock %}

@@ -27,6 +27,9 @@ def user_detail(username):
     user = User.objects(username=username).first()
     comments = Comment.objects(commenter=user)
 
+    if (user == None):
+        return render_template('user_detail.html', error_msg=f'User {username} not found.')
+
     mongo_lock.release()
 
     game_subscriptions = User.objects(username=user.username).first().game_subscriptions
