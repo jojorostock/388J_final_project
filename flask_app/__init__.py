@@ -158,7 +158,9 @@ mongo_lock.release()
 
 from . import messaging
 # start messaging timer
-Timer(messaging.twilio_timer_interval, messaging.send_scheduled_messages).start()
+instantiated = "timer" in globals() or "timer" in locals()
+if not instantiated:
+	timer = Timer(messaging.twilio_timer_interval, messaging.send_scheduled_messages).start()
 
 session = {}
 
