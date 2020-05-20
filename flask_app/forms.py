@@ -32,7 +32,7 @@ class RegistrationForm(FlaskForm):
         if type(phone.data) is not int:
             raise ValidationError('Phone number must not contain non-numeric characters')
         first_digit = int(phone.data / 10000000000)
-        print('first_digit: ' + str(first_digit))
+
         if (first_digit < 1 or first_digit > 9):
             raise ValidationError('Phone number must 11 digits. Make sure to include country code and area code.')
 

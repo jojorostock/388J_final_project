@@ -21,7 +21,7 @@ def send_scheduled_messages():
 	for user in User.objects():
 		for subscription in user.game_subscriptions:
 			game = sport_client.getEventByID(subscription)
-			print(game.dateEventLocal)
+
 			if game.dateEventLocal is not None:
 				game_date = utils.extract_date_tuple(game.dateEventLocal)
 				curr_date = utils.current_date_tuple()

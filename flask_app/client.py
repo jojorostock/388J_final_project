@@ -85,7 +85,6 @@ class SportClient(object):
             if league.strLeague == "NFL" or league.strLeague == "MLB" or league.strLeague == "American Major League Soccer" or league.strLeague == "NHL" or league.strLeague == "NBA":
                 result.append(league)
 
-        # print(result[0].strLeague)
         return result
 
     def getLeagueLastFifteen(self, league_id, nextFifteen = False):
